@@ -45,16 +45,15 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-.svn/entries
-.svn/format
-*.svn-base
-.svn/wc.db
-*.db-journal
-*.filters
-BigWinner/BigWinner.vcxproj.user
-BigWinner.sdf
-BigWinner.suo
-ipch/bigwinner-fcd33f71/bigwinner-1e966fd1.ipch
-Debug/BigWinner.exe
-Debug/BigWinner.pdb
-*.ilk
+BigWinner.vcxproj
+*.obj
+Debug/BigWinner.exe.embed.manifest
+*.res
+Debug/BigWinner.exe.intermediate.manifest
+Debug/BigWinner.lastbuildstate
+*.log
+Debug/BigWinner.vcxprojResolveAssemblyReference.cache
+*.tlog
+Debug/BigWinner_manifest.rc
+*.idb
+Debug/vc100.pdb
