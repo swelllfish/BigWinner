@@ -14,5 +14,7 @@
 
 //projcet file
 #include "BasicFun.h"
+#include "PaintFun.h"
+
 #include "OpFile.h"
 #include "Analisis.h"

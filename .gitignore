@@ -58,3 +58,4 @@ ipch/bigwinner-fcd33f71/bigwinner-1e966fd1.ipch
 Debug/BigWinner.exe
 Debug/BigWinner.pdb
 *.ilk
+*.ipch

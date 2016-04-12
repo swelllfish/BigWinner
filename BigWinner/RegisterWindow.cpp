@@ -3,7 +3,7 @@
 /**Bigwinner register window main function**/
 
 #define ID_TIMER 1
-#define TIMER_CLK 30
+#define TIMER_CLK 13
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 WNDCLASS SetWndClass(HINSTANCE, TCHAR []);
@@ -75,6 +75,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		SetTimer(hwnd, ID_TIMER, TIMER_CLK, NULL);
+		hdc = GetDC(hwnd);
+		analisis.SetBackGroundBM(hdc);
+		ReleaseDC(hwnd, hdc);
 		opfile.FileAnalise();
 		return 0;
 
@@ -84,7 +87,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ReleaseDC(hwnd, hdc);
 
 		return 0;
-
 		
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
@@ -102,7 +104,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_DESTROY:
-		opfile.AnaliseEnd();
+		opfile.Exit();
+		analisis.Exit();
+		KillTimer(hwnd, ID_TIMER);
 		PostQuitMessage(0);
 		return 0;
 

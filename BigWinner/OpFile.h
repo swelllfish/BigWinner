@@ -22,7 +22,7 @@ public:
 	void FileAnalise();
 	char *LoadFile(const char *FilePath);
 	void GetAllData(char *FileBuf);
-	bool AnaliseEnd();
+	bool Exit();
 private:
 	char *FileBuf;
 	long FileSize;

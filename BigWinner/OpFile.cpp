@@ -100,7 +100,7 @@ void OpFile::GetAllData(char *FileBuf)
 	}
 }
 
-bool OpFile::AnaliseEnd()
+bool OpFile::Exit()
 {
 	return true;
 }
