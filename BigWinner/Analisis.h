@@ -18,7 +18,6 @@ public:
 private:
 	RECT WorkRect;
 	RECT ShowRect;
-	RECT NewRect;
 	BOOL MouseWhellFlag;
 	HBITMAP BMBackGround;
 	short SizeRate;
