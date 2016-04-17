@@ -8,6 +8,7 @@ public:
 	Analisis(void);
 	~Analisis(void);
 
+	void ShowTable(HDC hdc, OpFile *opfile);
 	void DrawBackGround(HDC hdc);
 	void SetWorkSpaceArea(int x, int y, HDC hdc);
 	void ChangeShowArea(short MouseWhell);

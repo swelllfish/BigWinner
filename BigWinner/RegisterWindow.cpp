@@ -90,7 +90,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
-		analisis.DrawBackGround(hdc);
+		analisis.ShowTable(hdc, &opfile);
 		EndPaint(hwnd, &ps);
 
 		return 0;

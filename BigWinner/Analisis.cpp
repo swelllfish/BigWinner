@@ -1,20 +1,16 @@
 #include "Analisis.h"
 
-#define BRUSH_PINK RGB(247, 202, 201)
-#define BRUSH_BLUE RGB(146, 168, 209)
-#define BRUSH_WHITE RGB(245, 245, 245)
-#define BRUSH_GRAY RGB(156, 156, 156)
-#define BRUSH_BLACK RGB(50, 50, 50)
-
-#define CHANGE_CNT 10	//window size change cnt
-
 Analisis::Analisis(void)
 {
 }
 
-
 Analisis::~Analisis(void)
 {
+}
+
+void Analisis::ShowTable(HDC hdc, OpFile *opfile)
+{
+	DrawBackGround(hdc);
 }
 
 void Analisis::SetBackGroundBM(HDC hdc)
@@ -24,40 +20,13 @@ void Analisis::SetBackGroundBM(HDC hdc)
 
 void Analisis::DrawBackGround(HDC hdc)
 {
-	static short cnt = 0;
 	HDC *hdcBuffer = new HDC;
 
 	*hdcBuffer = CreateCompatibleDC(hdc);
 	SelectObject(*hdcBuffer, BMBackGround);
-	SelectObject(*hdcBuffer, GetStockObject(NULL_PEN));
-
-	DrawRect(hdcBuffer, BRUSH_BLUE, WorkRect);	//window background
-
-	ShowRect.left += 3;
-	ShowRect.top += 3;
-	ShowRect.right += 3; 
-	ShowRect.bottom += 3;
-	DrawRect(hdcBuffer, BRUSH_BLACK, ShowRect);
-	ShowRect.left -= 3;
-	ShowRect.top -= 3;
-	ShowRect.right -= 3; 
-	ShowRect.bottom -= 3;
-
-	ShowRect.left -= 1;
-	ShowRect.top -= 1;
-	ShowRect.right += 1; 
-	ShowRect.bottom += 1;
-	DrawRect(hdcBuffer, BRUSH_GRAY, ShowRect);
-
-	ShowRect.left += 1;
-	ShowRect.top += 1;
-	ShowRect.right -= 1; 
-	ShowRect.bottom -= 1;
-
-	DrawRect(hdcBuffer, BRUSH_WHITE, ShowRect);
-
+	DrawRect(hdcBuffer, BRUSH_BLUE, WorkRect, NULL_PEN);	//window background
+	DrawFrame(hdcBuffer, ShowRect);
 	BitBlt(hdc, WorkRect.left, WorkRect.top, WorkRect.right, WorkRect.bottom, *hdcBuffer, WorkRect.left, WorkRect.top, SRCCOPY);
-
 	free(hdcBuffer);
 }
 

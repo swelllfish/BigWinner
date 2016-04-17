@@ -3,6 +3,9 @@
 #include "stdafx.h"
 using namespace std;
 
+#define SE_RED_BALL (0)
+#define US_RED_BALL (1)
+#define BLUE_BALL   (2)
 
 typedef struct
 {
@@ -23,6 +26,7 @@ public:
 	char *LoadFile(const char *FilePath);
 	void GetAllData(char *FileBuf);
 	bool Exit();
+	U8   GetBallNumber(int Data, U8 Num, U8 Type);
 private:
 	char *FileBuf;
 	long FileSize;

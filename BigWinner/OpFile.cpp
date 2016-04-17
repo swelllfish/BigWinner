@@ -100,6 +100,13 @@ void OpFile::GetAllData(char *FileBuf)
 	}
 }
 
+U8 OpFile::GetBallNumber(int Data, U8 Num, U8 Type)
+{
+	U8 BallNumber;
+
+	return BallNumber;
+}
+
 bool OpFile::Exit()
 {
 	return true;
