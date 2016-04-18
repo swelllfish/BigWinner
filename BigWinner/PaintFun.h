@@ -8,6 +8,9 @@
 #define BRUSH_GRAY RGB(156, 156, 156)
 #define BRUSH_BLACK RGB(50, 50, 50)
 
+#define HORZION_COOR (0)
+#define VERTICAL_COOR (1)
+
 #define CHANGE_CNT 10	//window size change cnt
 
 class PaintFun
@@ -18,5 +21,6 @@ public:
 
 	void DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen);
 	void DrawFrame(HDC *hdc, RECT rect);
+	void DrawCoordinate(HDC *hdc, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype);
 };
 

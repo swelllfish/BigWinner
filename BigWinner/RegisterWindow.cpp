@@ -66,7 +66,7 @@ WNDCLASS SetWndClass(HINSTANCE hInstance, TCHAR szAppName[])
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HDC hdc;
+	HDC *hdc;
 	static OpFile opfile;
 	static Analisis analisis;
 	PAINTSTRUCT ps;
@@ -75,24 +75,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		SetTimer(hwnd, ID_TIMER, TIMER_CLK, NULL);
-		hdc = GetDC(hwnd);
-		analisis.SetBackGroundBM(hdc);
-		ReleaseDC(hwnd, hdc);
 		opfile.FileAnalise();
 		return 0;
 
 	case WM_SIZE:
-		hdc = GetDC(hwnd);
-		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam), hdc);
-		ReleaseDC(hwnd, hdc);
+		hdc = new HDC;
+		*hdc = GetDC(hwnd);
+		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
+		ReleaseDC(hwnd, *hdc);
 
+		free(hdc);
 		return 0;
 		
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd, &ps);
+		hdc = new HDC;
+		*hdc = BeginPaint(hwnd, &ps);
 		analisis.ShowTable(hdc, &opfile);
 		EndPaint(hwnd, &ps);
 
+		free(hdc);
 		return 0;
 
 	case WM_MOUSEWHEEL:
