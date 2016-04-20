@@ -50,8 +50,6 @@ Temporary Items
 *.svn-base
 .svn/wc.db
 *.db-journal
-*.filters
-BigWinner/BigWinner.vcxproj.user
 BigWinner.sdf
 BigWinner.suo
 ipch/bigwinner-fcd33f71/bigwinner-1e966fd1.ipch
@@ -59,3 +57,4 @@ Debug/BigWinner.exe
 Debug/BigWinner.pdb
 *.ilk
 *.ipch
+BigWinner.opensdf

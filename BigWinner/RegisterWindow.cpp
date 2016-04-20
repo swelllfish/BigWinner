@@ -84,7 +84,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
 		ReleaseDC(hwnd, *hdc);
 
-		free(hdc);
+		delete(hdc);
 		return 0;
 		
 	case WM_PAINT:
@@ -93,7 +93,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		analisis.ShowTable(hdc, &opfile);
 		EndPaint(hwnd, &ps);
 
-		free(hdc);
+		delete(hdc);
 		return 0;
 
 	case WM_MOUSEWHEEL:

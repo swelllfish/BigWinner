@@ -109,5 +109,6 @@ U8 OpFile::GetBallNumber(int Data, U8 Num, U8 Type)
 
 bool OpFile::Exit()
 {
+	delete(FileBuf);
 	return true;
 }

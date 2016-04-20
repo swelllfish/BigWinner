@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Analisis.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicFun.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="OpFile.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintFun.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterWindow.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Analisis.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicFun.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="OpFile.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="PaintFun.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HeadFile">
+      <UniqueIdentifier>{7680bb04-f5e0-4b8e-9f81-99416fb69ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFile">
+      <UniqueIdentifier>{520a0343-ab76-4104-8dbc-cec675f0b020}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

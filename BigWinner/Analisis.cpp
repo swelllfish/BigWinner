@@ -41,8 +41,8 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 
 	DeleteObject(*bitmapBuff);
 	DeleteDC(*hdcBuffer);
-	free(bitmapBuff);
-	free(hdcBuffer);
+	delete(bitmapBuff);
+	delete(hdcBuffer);
 }
 
 void Analisis::DrawBackGround(HDC *hdcBuffer)
