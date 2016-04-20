@@ -20,5 +20,7 @@ private:
 	RECT ShowRect;
 	BOOL MouseWhellFlag;
 	short SizeRate;
+	int  PointCnt;
+	int  NewPointCnt;
 };
 

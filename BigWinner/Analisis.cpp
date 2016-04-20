@@ -2,6 +2,8 @@
 
 Analisis::Analisis(void)
 {
+	PointCnt = 7;
+	NewPointCnt = 7;
 }
 
 Analisis::~Analisis(void)
@@ -23,7 +25,7 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 		ShowRect.left + 10,
 		ShowRect.bottom - 10,
 		ShowRect.right - ShowRect.left - 20, 
-		50, 
+		PointCnt, 
 		50,
 		HORZION_COOR
 		);
@@ -68,15 +70,34 @@ void Analisis::ChangeShowArea(short MouseWhell)
 {
 	if (MouseWhell < 0)	//scroll down
 	{
+		if (NewPointCnt < 490)
+		{
+			NewPointCnt += 7;
+		}
 	}
 	else if (MouseWhell > 0) //scroll up
 	{
+		if (NewPointCnt > 7)
+		{
+			NewPointCnt -= 7;
+		}
 	}
 }
 
 void Analisis::InvalidateArea(HWND hwnd)
 {
-	//InvalidateRect(hwnd, &WorkRect, FALSE);
+	if (NewPointCnt != PointCnt)
+	{
+		if (NewPointCnt > PointCnt)
+		{
+			PointCnt++;
+		}
+		else if (NewPointCnt < PointCnt)
+		{
+			PointCnt--;
+		}
+		InvalidateRect(hwnd, &WorkRect, FALSE);
+	}
 }
 
 void Analisis::Exit()
