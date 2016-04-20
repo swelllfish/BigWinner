@@ -100,6 +100,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		analisis.ChangeShowArea(HIWORD(wParam));
 		return 0;
 
+	case WM_LBUTTONDOWN:
+		return 0;
+
+	case WM_LBUTTONUP:
+		return 0;
+
+	case WM_MOUSEMOVE:
+		return 0;
+
 	case WM_TIMER:
 		analisis.InvalidateArea(hwnd);
 		return 0;
