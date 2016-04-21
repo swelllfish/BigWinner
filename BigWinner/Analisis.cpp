@@ -4,6 +4,11 @@ Analisis::Analisis(void)
 {
 	PointCnt = 7;
 	NewPointCnt = 7;
+
+	Pre_Mouse_Location.x = Pre_Mouse_Location.y = 0;
+	Now_Mouse_Location.x = Now_Mouse_Location.y = 0;
+	Mouse_xMove = 0;
+	Point_Start_Location = 0;
 }
 
 Analisis::~Analisis(void)
@@ -20,13 +25,20 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 	SelectObject(*hdcBuffer, *bitmapBuff);
 
 	DrawBackGround(hdcBuffer);
+	if (Mouse_xMove)
+	{
+		int inter_len = (ShowRect.right - ShowRect.left - 20) / PointCnt;
+		Point_Start_Location += Mouse_xMove;
+		Mouse_xMove = 0;
+		Point_Start_Location = Point_Start_Location > 0 ? Point_Start_Location % inter_len :Point_Start_Location % inter_len + inter_len;
+	}
 
 	DrawCoordinate(hdcBuffer, 
 		ShowRect.left + 10,
 		ShowRect.bottom - 10,
 		ShowRect.right - ShowRect.left - 20, 
 		PointCnt, 
-		50,
+		Point_Start_Location,
 		HORZION_COOR
 		);
 
@@ -35,7 +47,7 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 		ShowRect.bottom - 10,
 		ShowRect.bottom - ShowRect.top - 20, 
 		33, 
-		100,
+		ShowRect.bottom - ShowRect.top - 20 / 33,
 		VERTICAL_COOR
 		);
 
@@ -81,6 +93,35 @@ void Analisis::ChangeShowArea(short MouseWhell)
 		{
 			NewPointCnt -= 7;
 		}
+	}
+}
+
+void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
+{
+	switch(act_type)
+	{
+	case WM_LBUTTONDOWN:
+		LButton_Down = TRUE;
+		break;
+
+	case WM_LBUTTONUP:
+		LButton_Down = FALSE;
+		break;
+
+	case WM_MOUSEMOVE:
+		Pre_Mouse_Location = Now_Mouse_Location;
+		Now_Mouse_Location.x = x;
+		Now_Mouse_Location.y = y;
+
+		if (LButton_Down)
+		{
+			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
+			InvalidateRect(hwnd, &WorkRect, FALSE);
+		}
+		break;
+
+		default:
+			break;
 	}
 }
 

@@ -43,13 +43,13 @@ void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
 }
 
 //Draw Horizon coordinnate
-//float start means how many percentage of the first point location in the first interval, value number is between 0 to 100
-void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int len, int cnt, float start, unsigned char coortype)
+//float start means how many percentage of the first point location in the first interval, value number is between 0 to len
+void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype)
 {
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
 	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
 	float interlen = (float)len / (float)cnt;
-	float startpoint = (start * interlen / 100);
+	int startpoint = start  % (int)interlen;
 
 	POINT *apt;
 
@@ -61,7 +61,7 @@ void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int 
 		apt[0].x = xlocation;
 		apt[0].y = ylocation;
 
-		apt[1].x = xlocation + (int)startpoint;
+		apt[1].x = xlocation + startpoint;
 		apt[1].y = ylocation;
 
 		apt[2].x = apt[1].x;
@@ -80,7 +80,7 @@ void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int 
 
 			apt[i + 2] = apt[i];
 		}
-		apt[TotalPointCnt - 1].x = apt[TotalPointCnt - 2].x + interlen - startpoint;
+		apt[TotalPointCnt - 1].x = apt[TotalPointCnt - 2].x + (int)interlen - startpoint;
 		apt[TotalPointCnt - 1].y = ylocation;
 	}
 	else if (coortype == VERTICAL_COOR)
@@ -90,7 +90,7 @@ void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int 
 		apt[0].y = ylocation;
 
 		apt[1].x = xlocation;
-		apt[1].y = ylocation - (int)startpoint;
+		apt[1].y = ylocation - startpoint;
 
 		apt[2].x = apt[1].x + 5;
 		apt[2].y = apt[1].y;
@@ -109,7 +109,7 @@ void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int 
 			apt[i + 2] = apt[i];
 		}
 		apt[TotalPointCnt - 1].x = xlocation;
-		apt[TotalPointCnt - 1].y = apt[TotalPointCnt - 2].y - interlen + startpoint;
+		apt[TotalPointCnt - 1].y = apt[TotalPointCnt - 2].y - (int)interlen + startpoint;
 	}
 
 	Polyline(*hdcBuffer, apt, TotalPointCnt);

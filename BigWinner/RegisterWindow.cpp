@@ -101,12 +101,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_LBUTTONDOWN:
+		analisis.MouseAction(hwnd, LOWORD(lParam), HIWORD(lParam), WM_LBUTTONDOWN);
 		return 0;
 
 	case WM_LBUTTONUP:
+		analisis.MouseAction(hwnd, LOWORD(lParam), HIWORD(lParam), WM_LBUTTONUP);
 		return 0;
 
 	case WM_MOUSEMOVE:
+		analisis.MouseAction(hwnd, LOWORD(lParam), HIWORD(lParam), WM_MOUSEMOVE);
 		return 0;
 
 	case WM_TIMER:
