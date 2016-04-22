@@ -15,41 +15,24 @@ Analisis::~Analisis(void)
 {
 }
 
+void Analisis::GetFilePoint(OpFile *opfile)
+{
+	p_opfile = opfile;
+}
+
 void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 {
 	HDC *hdcBuffer = new HDC;
 	HBITMAP *bitmapBuff = new HBITMAP;
+	PaintFun paintfun;
 
 	*bitmapBuff =  CreateCompatibleBitmap(*hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	*hdcBuffer = CreateCompatibleDC(*hdc);
 	SelectObject(*hdcBuffer, *bitmapBuff);
 
 	DrawBackGround(hdcBuffer);
-	if (Mouse_xMove)
-	{
-		int inter_len = (ShowRect.right - ShowRect.left - 20) / PointCnt;
-		Point_Start_Location += Mouse_xMove;
-		Mouse_xMove = 0;
-		Point_Start_Location = Point_Start_Location > 0 ? Point_Start_Location % inter_len :Point_Start_Location % inter_len + inter_len;
-	}
 
-	DrawCoordinate(hdcBuffer, 
-		ShowRect.left + 10,
-		ShowRect.bottom - 10,
-		ShowRect.right - ShowRect.left - 20, 
-		PointCnt, 
-		Point_Start_Location,
-		HORZION_COOR
-		);
-
-	DrawCoordinate(hdcBuffer, 
-		ShowRect.left + 10,
-		ShowRect.bottom - 10,
-		ShowRect.bottom - ShowRect.top - 20, 
-		33, 
-		ShowRect.bottom - ShowRect.top - 20 / 33,
-		VERTICAL_COOR
-		);
+	DrawCoordinate(hdcBuffer);
 
 	BitBlt(*hdc, WorkRect.left, WorkRect.top, WorkRect.right, WorkRect.bottom, *hdcBuffer, WorkRect.left, WorkRect.top, SRCCOPY);
 
@@ -59,10 +42,44 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 	delete(hdcBuffer);
 }
 
+void Analisis::DrawCoordinate(HDC *hdcBuffer)
+{
+	PaintFun paintfun;
+
+	if (Mouse_xMove)
+	{
+		int inter_len = (ShowRect.right - ShowRect.left - 20) / PointCnt;
+		Point_Start_Location += Mouse_xMove;
+		Mouse_xMove = 0;
+		Point_Start_Location = Point_Start_Location > 0 ? Point_Start_Location % inter_len :Point_Start_Location % inter_len + inter_len;
+	}
+
+	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
+	paintfun.DrawCoordinate(hdcBuffer, 
+		ShowRect.left + 10,
+		ShowRect.bottom - 10,
+		ShowRect.right - ShowRect.left - 20, 
+		PointCnt, 
+		Point_Start_Location,
+		HORZION_COOR
+		);
+
+	paintfun.DrawCoordinate(hdcBuffer, 
+		ShowRect.left + 10,
+		ShowRect.bottom - 10,
+		ShowRect.bottom - ShowRect.top - 20, 
+		33, 
+		ShowRect.bottom - ShowRect.top - 20 / 33,
+		VERTICAL_COOR
+		);
+}
+
 void Analisis::DrawBackGround(HDC *hdcBuffer)
 {
-	DrawRect(hdcBuffer, BRUSH_BLUE, WorkRect, NULL_PEN);	//window background
-	DrawFrame(hdcBuffer, ShowRect);
+	PaintFun paintfun;
+
+	paintfun.DrawRect(hdcBuffer, BRUSH_BLUE, WorkRect, NULL_PEN);	//window background
+	paintfun.DrawFrame(hdcBuffer, ShowRect);
 }
 
 void Analisis::SetWorkSpaceArea(int x, int y)
@@ -82,7 +99,7 @@ void Analisis::ChangeShowArea(short MouseWhell)
 {
 	if (MouseWhell < 0)	//scroll down
 	{
-		if (NewPointCnt < 490)
+		if (NewPointCnt < 170)
 		{
 			NewPointCnt += 7;
 		}
@@ -105,7 +122,10 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		break;
 
 	case WM_LBUTTONUP:
-		LButton_Down = FALSE;
+		if (Now_Mouse_Location.x - Pre_Mouse_Location.x == 0)
+		{
+			LButton_Down = FALSE;
+		}
 		break;
 
 	case WM_MOUSEMOVE:
@@ -120,8 +140,8 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		}
 		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 

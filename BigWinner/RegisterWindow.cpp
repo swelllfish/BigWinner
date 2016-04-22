@@ -76,6 +76,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		SetTimer(hwnd, ID_TIMER, TIMER_CLK, NULL);
 		opfile.FileAnalise();
+		analisis.GetFilePoint(&opfile);
 		return 0;
 
 	case WM_SIZE:

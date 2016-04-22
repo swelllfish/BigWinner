@@ -100,11 +100,46 @@ void OpFile::GetAllData(char *FileBuf)
 	}
 }
 
-U8 OpFile::GetBallNumber(int Data, U8 Num, U8 Type)
+vector<U8>::iterator OpFile::GetInfor_it(int SerNum, U8 BallNum, U8 Type)
 {
-	U8 BallNumber;
+	vector<U8>::iterator it_BallNum;
 
-	return BallNumber;
+	switch(Type)
+	{
+	case SE_RED_BALL:
+		it_BallNum = numinfor.SequRed.begin();
+		break;
+	case US_RED_BALL:
+		break;
+	case BLUE_BALL:
+		break;
+	default:
+		break;
+	}
+
+	return it_BallNum;
+}
+
+vector<string>::iterator OpFile::GetInfor_it(int SerNum, U8 Type)
+{
+	vector<string>::iterator it_Infor;
+	
+	switch(Type)
+	{
+	case DATA_NUM:
+		it_Infor = numinfor.DateNum.begin();
+		break;
+		
+	case DATA:
+		it_Infor = numinfor.Date.begin();
+		break;
+
+	default:
+		break;
+	}
+
+	it_Infor += SerNum;
+	return it_Infor;
 }
 
 bool OpFile::Exit()

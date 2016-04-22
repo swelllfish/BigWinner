@@ -22,5 +22,6 @@ public:
 	void DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen);
 	void DrawFrame(HDC *hdc, RECT rect);
 	void DrawCoordinate(HDC *hdc, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype);
+	HFONT CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle);
 };
 

@@ -44,7 +44,14 @@ void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
 
 //Draw Horizon coordinnate
 //float start means how many percentage of the first point location in the first interval, value number is between 0 to len
-void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype)
+void PaintFun::DrawCoordinate(
+	HDC *hdcBuffer, 
+	int xlocation, 
+	int ylocation, 
+	int len, 
+	int cnt, 
+	int start, 
+	unsigned char coortype)
 {
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
 	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
@@ -114,5 +121,27 @@ void PaintFun::DrawCoordinate(HDC *hdcBuffer, int xlocation, int ylocation, int 
 
 	Polyline(*hdcBuffer, apt, TotalPointCnt);
 	free(apt);
+}
+
+HFONT PaintFun::CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle)
+{
+	HFONT hFont;
+	hFont = CreateFont(
+		height,      //字体的逻辑高度
+		width,       //逻辑平均字符宽度
+		angle,       //与水平线的角度
+		0,           //基线方位角度
+		FW_REGULAR,  //字形：常规
+		FALSE,       //字形：斜体
+		FALSE,       //字形：下划线
+		FALSE,       //字形：粗体
+		GB2312_CHARSET,          //字符集
+		OUT_DEFAULT_PRECIS,      //输出精度
+		CLIP_DEFAULT_PRECIS,     //剪截精度
+		PROOF_QUALITY,           //输出品质
+		FIXED_PITCH | FF_MODERN, //倾斜度
+		face                     //字体
+		); 
+	return hFont;
 }
 
