@@ -1,6 +1,10 @@
 #pragma once
 
 #include "windows.h"
+#include <vector>
+#include "BasicFun.h"
+
+using namespace std;
 
 #define BRUSH_PINK RGB(247, 202, 201)
 #define BRUSH_BLUE RGB(146, 168, 209)
@@ -21,7 +25,7 @@ public:
 
 	void DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen);
 	void DrawFrame(HDC *hdc, RECT rect);
-	void DrawCoordinate(HDC *hdc, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype);
+	void DrawCoordinate(HDC *hdc, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype, vector<string>::iterator TextString);
 	HFONT CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle);
 };
 

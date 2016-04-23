@@ -51,9 +51,17 @@ void PaintFun::DrawCoordinate(
 	int len, 
 	int cnt, 
 	int start, 
-	unsigned char coortype)
+	unsigned char coortype,
+	vector<string>::iterator TextString)
 {
+	HFONT *hDataFont = new HFONT;
+	*hDataFont = CreateMyFont(*hdcBuffer, (LPCTSTR)("ËÎÌו"), 10, 10, -60);
+	SelectObject(*hdcBuffer, hDataFont);
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
+
+	LPCTSTR *lpcText = (LPCTSTR *)malloc(sizeof(LPCTSTR) * cnt);
+	unsigned char TextLen = TextString->length();
+
 	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
 	float interlen = (float)len / (float)cnt;
 	int startpoint = start  % (int)interlen;
@@ -74,9 +82,14 @@ void PaintFun::DrawCoordinate(
 		apt[2].x = apt[1].x;
 		apt[2].y = apt[1].y - 5;
 
+
+		lpcText[0] = StringToLPCWSTR(TextString[0]);
+
+		TextOut(*hdcBuffer, apt[1].x, apt[1].y, lpcText[0], TextLen);
 		apt[3] = apt[1];
 		int i;
 		//start point and end point need to be special handled
+		int j = 1;
 		for (i = 4; i < TotalPointCnt - 1; i += 3)
 		{
 			apt[i].x = (int)(((i - 1) / 3) * interlen + startpoint) + xlocation;
@@ -86,6 +99,9 @@ void PaintFun::DrawCoordinate(
 			apt[i + 1].y = apt[i].y - 5;
 
 			apt[i + 2] = apt[i];
+
+			lpcText[j] = StringToLPCWSTR(TextString[j]);
+			TextOut(*hdcBuffer, apt[i].x, apt[i].y, lpcText[j++], TextLen);
 		}
 		apt[TotalPointCnt - 1].x = apt[TotalPointCnt - 2].x + (int)interlen - startpoint;
 		apt[TotalPointCnt - 1].y = ylocation;
@@ -120,7 +136,11 @@ void PaintFun::DrawCoordinate(
 	}
 
 	Polyline(*hdcBuffer, apt, TotalPointCnt);
+
 	free(apt);
+	free(lpcText);
+	DeleteObject(hDataFont);
+	delete(hDataFont);
 }
 
 HFONT PaintFun::CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle)

@@ -84,7 +84,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		*hdc = GetDC(hwnd);
 		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
 		ReleaseDC(hwnd, *hdc);
-
 		delete(hdc);
 		return 0;
 		
@@ -93,7 +92,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		*hdc = BeginPaint(hwnd, &ps);
 		analisis.ShowTable(hdc, &opfile);
 		EndPaint(hwnd, &ps);
-
 		delete(hdc);
 		return 0;
 

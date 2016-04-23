@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-class Analisis : public PaintFun
+class Analisis
 {
 public:
 	Analisis(void);
@@ -19,6 +19,7 @@ public:
 	void Exit();
 
 private:
+	PaintFun paintfun;
 	OpFile *p_opfile;
 	RECT  WorkRect;		//the Window size
 	RECT  ShowRect;		//Table size

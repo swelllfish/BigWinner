@@ -57,20 +57,22 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
 	paintfun.DrawCoordinate(hdcBuffer, 
 		ShowRect.left + 10,
-		ShowRect.bottom - 10,
-		ShowRect.right - ShowRect.left - 20, 
+		ShowRect.bottom - 20,
+		ShowRect.right - ShowRect.left - 50, 
 		PointCnt, 
 		Point_Start_Location,
-		HORZION_COOR
+		HORZION_COOR,
+		it_string
 		);
 
 	paintfun.DrawCoordinate(hdcBuffer, 
 		ShowRect.left + 10,
-		ShowRect.bottom - 10,
+		ShowRect.bottom - 20,
 		ShowRect.bottom - ShowRect.top - 20, 
 		33, 
 		ShowRect.bottom - ShowRect.top - 20 / 33,
-		VERTICAL_COOR
+		VERTICAL_COOR,
+		it_string
 		);
 }
 
@@ -122,10 +124,15 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		break;
 
 	case WM_LBUTTONUP:
-		if (Now_Mouse_Location.x - Pre_Mouse_Location.x == 0)
+		if (abs(Pre_Mouse_Location.x - Now_Mouse_Location.x) <= 3)
 		{
 			LButton_Down = FALSE;
 		}
+		else
+		{
+			LButton_Down = TRUE;
+		}
+
 		break;
 
 	case WM_MOUSEMOVE:
@@ -136,6 +143,7 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		if (LButton_Down)
 		{
 			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
+
 			InvalidateRect(hwnd, &WorkRect, FALSE);
 		}
 		break;
