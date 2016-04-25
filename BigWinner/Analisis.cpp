@@ -120,17 +120,17 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 	switch(act_type)
 	{
 	case WM_LBUTTONDOWN:
-		LButton_Down = TRUE;
+		LButton_Down_Flag = TRUE;
+		Slide_Flag = FALSE;
 		break;
 
 	case WM_LBUTTONUP:
-		if (abs(Pre_Mouse_Location.x - Now_Mouse_Location.x) <= 3)
+		LButton_Down_Flag = FALSE;
+		Slide_xMove = (double)(Now_Mouse_Location.x - Pre_Mouse_Location.x);
+
+		if (abs(Slide_xMove) >= 3)
 		{
-			LButton_Down = FALSE;
-		}
-		else
-		{
-			LButton_Down = TRUE;
+			Slide_Flag = TRUE;
 		}
 
 		break;
@@ -140,7 +140,7 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		Now_Mouse_Location.x = x;
 		Now_Mouse_Location.y = y;
 
-		if (LButton_Down)
+		if (LButton_Down_Flag)
 		{
 			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
 
@@ -166,6 +166,18 @@ void Analisis::InvalidateArea(HWND hwnd)
 			PointCnt--;
 		}
 		InvalidateRect(hwnd, &WorkRect, FALSE);
+	}
+
+	if (Slide_Flag)
+	{
+		Mouse_xMove = (int)Slide_xMove;
+		InvalidateRect(hwnd, &WorkRect, FALSE);
+		Slide_xMove *= 0.9;
+		if (abs(Slide_xMove) < 5)
+		{
+			Slide_Flag = FALSE;
+			Slide_xMove = 0;
+		}
 	}
 }
 

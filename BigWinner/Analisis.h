@@ -25,10 +25,12 @@ private:
 	RECT  ShowRect;		//Table size
 	int   PointCnt;		//Old Horrizon coordinate point cnt
 	int   NewPointCnt;	//Horrizon coordinate point cnt
-	bool  LButton_Down;
+	bool  LButton_Down_Flag;
+	bool  Slide_Flag;
 	POINT Pre_Mouse_Location;
 	POINT Now_Mouse_Location;
 	int   Mouse_xMove;	//Table move follow the cursor
+	double Slide_xMove;  //Table Slide move
 	int   Point_Start_Location;	//First Point Location
 };
 
