@@ -173,7 +173,7 @@ void Analisis::InvalidateArea(HWND hwnd)
 		Mouse_xMove = (int)Slide_xMove;
 		InvalidateRect(hwnd, &WorkRect, FALSE);
 		Slide_xMove *= 0.9;
-		if (abs(Slide_xMove) < 5)
+		if (abs(Slide_xMove) < 2)
 		{
 			Slide_Flag = FALSE;
 			Slide_xMove = 0;
