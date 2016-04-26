@@ -21,6 +21,8 @@ void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen)
 		rect.right, 
 		rect.bottom
 		);
+	DeleteObject(GetStockObject(pen));
+	DeleteObject(CreateSolidBrush(color));
 }
 
 void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
@@ -59,7 +61,7 @@ void PaintFun::DrawCoordinate(
 	SelectObject(*hdcBuffer, hDataFont);
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
 
-	LPCTSTR *lpcText = (LPCTSTR *)malloc(sizeof(LPCTSTR) * cnt);
+	wchar_t *lpcText;// = (LPCTSTR *)malloc(sizeof(LPCTSTR) * cnt);
 	unsigned char TextLen = TextString->length();
 
 	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
@@ -82,10 +84,11 @@ void PaintFun::DrawCoordinate(
 		apt[2].x = apt[1].x;
 		apt[2].y = apt[1].y - 5;
 
+		lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[0].length() + 1));
+		StringToLPCWSTR(TextString[0], lpcText);
+		TextOut(*hdcBuffer, apt[1].x, apt[1].y, lpcText, TextLen);
+		free(lpcText);
 
-		lpcText[0] = StringToLPCWSTR(TextString[0]);
-
-		TextOut(*hdcBuffer, apt[1].x, apt[1].y, lpcText[0], TextLen);
 		apt[3] = apt[1];
 		int i;
 		//start point and end point need to be special handled
@@ -100,8 +103,10 @@ void PaintFun::DrawCoordinate(
 
 			apt[i + 2] = apt[i];
 
-			lpcText[j] = StringToLPCWSTR(TextString[j]);
-			TextOut(*hdcBuffer, apt[i].x, apt[i].y, lpcText[j++], TextLen);
+			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[j].length() + 1));
+			StringToLPCWSTR(TextString[j], lpcText);
+			TextOut(*hdcBuffer, apt[i].x, apt[i].y, lpcText, TextLen);
+			free(lpcText);
 		}
 		apt[TotalPointCnt - 1].x = apt[TotalPointCnt - 2].x + (int)interlen - startpoint;
 		apt[TotalPointCnt - 1].y = ylocation;
@@ -138,8 +143,8 @@ void PaintFun::DrawCoordinate(
 	Polyline(*hdcBuffer, apt, TotalPointCnt);
 
 	free(apt);
-	free(lpcText);
 	DeleteObject(hDataFont);
+	DeleteObject(GetStockObject(BLACK_PEN));
 	delete(hDataFont);
 }
 

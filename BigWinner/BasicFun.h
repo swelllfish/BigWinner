@@ -10,4 +10,4 @@ U8 ASCII2U8(char *pbuf, int cnt);
 
 std::string ASCII2String(char *pbuf, int cnt);
 
-LPCWSTR StringToLPCWSTR(std::string orig);
+void StringToLPCWSTR(std::string orig, wchar_t *wcstring);

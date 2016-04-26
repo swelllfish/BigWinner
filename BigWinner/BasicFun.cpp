@@ -27,14 +27,9 @@ std::string ASCII2String(char *pBuf, int cnt)
 	return result;
 }
 
-LPCWSTR StringToLPCWSTR(std::string orig)
+void StringToLPCWSTR(std::string orig, wchar_t *wcstring)
 {
 	size_t origsize = orig.length() + 1;
-	const size_t newsize = 100;
 	size_t convertedChars = 0;
-	wchar_t *wcstring = (wchar_t *) malloc(sizeof(wchar_t) *(orig.length() - 1));
 	mbstowcs_s(&convertedChars, wcstring, origsize, orig.c_str(), _TRUNCATE);
-
-
-	return wcstring;
 }
