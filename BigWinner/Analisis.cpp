@@ -125,6 +125,7 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 	case WM_LBUTTONDOWN:
 		LButton_Down_Flag = TRUE;
 		Slide_Flag = FALSE;
+		SetCapture(hwnd);
 		break;
 
 	case WM_LBUTTONUP:
@@ -135,7 +136,7 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		{
 			Slide_Flag = TRUE;
 		}
-
+		ReleaseCapture();
 		break;
 
 	case WM_MOUSEMOVE:
