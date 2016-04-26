@@ -45,10 +45,13 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 void Analisis::DrawCoordinate(HDC *hdcBuffer)
 {
 	PaintFun paintfun;
+	int xCoor_Len = ShowRect.right - ShowRect.left - 50;
+	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
+	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
 
 	if (Mouse_xMove)
 	{
-		int inter_len = (ShowRect.right - ShowRect.left - 20) / PointCnt;
+		int inter_len = (xCoor_Len) / PointCnt;
 		Point_Start_Location += Mouse_xMove;
 		Mouse_xMove = 0;
 		Point_Start_Location = Point_Start_Location > 0 ? Point_Start_Location % inter_len :Point_Start_Location % inter_len + inter_len;
@@ -56,9 +59,9 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
 	paintfun.DrawCoordinate(hdcBuffer, 
-		ShowRect.left + 10,
-		ShowRect.bottom - 20,
-		ShowRect.right - ShowRect.left - 50, 
+		Start_Point.x,
+		Start_Point.y,
+		xCoor_Len, 
 		PointCnt, 
 		Point_Start_Location,
 		HORZION_COOR,
@@ -66,9 +69,9 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 		);
 
 	paintfun.DrawCoordinate(hdcBuffer, 
-		ShowRect.left + 10,
-		ShowRect.bottom - 20,
-		ShowRect.bottom - ShowRect.top - 20, 
+		Start_Point.x,
+		Start_Point.y,
+		yCoor_Len, 
 		33, 
 		ShowRect.bottom - ShowRect.top - 20 / 33,
 		VERTICAL_COOR,
