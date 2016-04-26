@@ -49,7 +49,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 WNDCLASS SetWndClass(HINSTANCE hInstance, TCHAR szAppName[])
 {
 	WNDCLASS wndclass;
-
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc = WndProc;
 	wndclass.cbClsExtra = 0;
@@ -57,7 +56,7 @@ WNDCLASS SetWndClass(HINSTANCE hInstance, TCHAR szAppName[])
 	wndclass.hInstance = hInstance;
 	wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndclass.hbrBackground = (HBRUSH)CreateSolidBrush(RGB(146, 168, 209));
+	wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndclass.lpszMenuName = NULL;
 	wndclass.lpszClassName = (LPCWSTR)szAppName;
 

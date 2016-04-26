@@ -13,16 +13,16 @@ PaintFun::~PaintFun(void)
 
 void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen)
 {
+	HBRUSH hBrush = CreateSolidBrush(color);
 	SelectObject(*hdcBuffer, GetStockObject(pen));
-	SelectObject(*hdcBuffer, CreateSolidBrush(color));
+	SelectObject(*hdcBuffer, hBrush);
 	Rectangle(*hdcBuffer, 
 		rect.left, 
 		rect.top, 
 		rect.right, 
 		rect.bottom
 		);
-	DeleteObject(GetStockObject(pen));
-	DeleteObject(CreateSolidBrush(color));
+	DeleteObject(hBrush);
 }
 
 void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
