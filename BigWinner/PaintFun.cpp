@@ -60,8 +60,9 @@ void PaintFun::DrawCoordinate(
 	*hDataFont = CreateMyFont(*hdcBuffer, (LPCTSTR)("ËÎÌו"), 10, 10, -60);
 	SelectObject(*hdcBuffer, hDataFont);
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
+	SetBkColor(*hdcBuffer, BRUSH_WHITE);
 
-	wchar_t *lpcText;// = (LPCTSTR *)malloc(sizeof(LPCTSTR) * cnt);
+	wchar_t *lpcText;
 	unsigned char TextLen = TextString->length();
 
 	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
