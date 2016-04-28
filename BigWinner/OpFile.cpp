@@ -58,45 +58,95 @@ char *OpFile::LoadFile(const char *FilePath)
 void OpFile::GetAllData(char *FileBuf)
 {
 	long cnt;
-	char *pBuf = FileBuf;
+	char *p_pBuf ,*pBuf = FileBuf;
+	U8 i;
+	pBuf += FileSize;
+
+// 	for (cnt = 0; cnt < FileSize;)
+// 	{
+// 		//Get DateNum
+// 		numinfor.DateNum.push_back(ASCII2String(pBuf, DateNumSize));
+// 		pBuf += DateNumSize;
+// 		++pBuf;	//add space
+// 		cnt += DateNumSize + 1;
+// 
+// 		//Get Date
+// 		numinfor.Date.push_back(ASCII2String(pBuf, DateSize));
+// 		pBuf += DateSize;
+// 		++pBuf;	//add space
+// 		cnt += DateSize + 1;
+// 
+// 		//Get 7 RedBall Num on sequence
+// 		for(i = 0; i < 6; ++i)
+// 		{
+// 			numinfor.SequRed.push_back(ASCII2U8(pBuf, SequRedSize));
+// 			pBuf += SequRedSize;
+// 			++pBuf;	//add space
+// 			cnt += SequRedSize + 1;
+// 		}
+// 
+// 		//Get 7 RedBall Num without sequence
+// 		for(i = 0; i < 6; ++i)
+// 		{
+// 			numinfor.UnseqRed.push_back(ASCII2U8(pBuf, UnseqRedSize));
+// 			pBuf += UnseqRedSize;
+// 			++pBuf;	//add space
+// 			cnt += UnseqRedSize + 1;
+// 		}
+// 
+// 		//Get Blue Ball Num
+// 		numinfor.BlueBall.push_back(ASCII2U8(pBuf, BlueBallSize));
+// 		pBuf += BlueBallSize;
+// 		pBuf += 2;	//add space
+// 		cnt += BlueBallSize + 2;
+// 	}
 
 	for (cnt = 0; cnt < FileSize;)
 	{
-		//Get DateNum
-		numinfor.DateNum.push_back(ASCII2String(pBuf, DateNumSize));
-		pBuf += DateNumSize;
-		++pBuf;	//add space
-		cnt += DateNumSize + 1;
-
-		//Get Date
-		numinfor.Date.push_back(ASCII2String(pBuf, DateSize));
-		pBuf += DateSize;
-		++pBuf;	//add space
-		cnt += DateSize + 1;
-
-		//Get 7 RedBall Num on sequence
-		for(U8 i = 0; i < 6; ++i)
+		//Get Blue Ball Num
+		if (cnt != 0)
 		{
-			numinfor.SequRed.push_back(ASCII2U8(pBuf, SequRedSize));
-			pBuf += SequRedSize;
-			++pBuf;	//add space
-			cnt += SequRedSize + 1;
+			cnt += 2; //Add Ascii Enter cnt;
+			pBuf -= 2;	//add enter
 		}
+
+		pBuf -= BlueBallSize;
+		numinfor.BlueBall.push_back(ASCII2U8(pBuf, BlueBallSize));
+		pBuf -= 1;
+		cnt += BlueBallSize + 1;
 
 		//Get 7 RedBall Num without sequence
-		for(U8 i = 0; i < 6; ++i)
+		pBuf -= (UnseqRedSize + 1) * 6;
+		cnt += (UnseqRedSize + 1) * 6;
+		p_pBuf = pBuf + 1;
+		for (i = 0; i < 6; ++i)
 		{
-			numinfor.UnseqRed.push_back(ASCII2U8(pBuf, UnseqRedSize));
-			pBuf += UnseqRedSize;
-			++pBuf;	//add space
-			cnt += UnseqRedSize + 1;
+			numinfor.UnseqRed.push_back(ASCII2U8(p_pBuf, UnseqRedSize));
+			p_pBuf += UnseqRedSize;
+			++p_pBuf;	//add space
 		}
 
-		//Get Blue Ball Num
-		numinfor.BlueBall.push_back(ASCII2U8(pBuf, BlueBallSize));
-		pBuf += BlueBallSize;
-		pBuf += 2;	//add space
-		cnt += BlueBallSize + 2;
+		//Get 7 RedBall Num on sequence
+		pBuf -= (SequRedSize + 1) * 6;
+		cnt += (UnseqRedSize + 1) * 6;
+		p_pBuf = pBuf + 1;
+		for (i = 0; i < 6; ++i)
+		{
+			numinfor.SequRed.push_back(ASCII2U8(p_pBuf, SequRedSize));
+			p_pBuf += SequRedSize;
+			++p_pBuf;
+		}
+
+		//Get Date
+		pBuf -= DateSize;
+		numinfor.Date.push_back(ASCII2String(pBuf, DateSize));
+		--pBuf;	//add space
+		cnt += DateSize + 1;
+
+		//Get DateNum
+		pBuf -= DateNumSize;
+		numinfor.DateNum.push_back(ASCII2String(pBuf, DateNumSize));
+		cnt += DateNumSize;
 	}
 }
 

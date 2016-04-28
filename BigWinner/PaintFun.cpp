@@ -94,7 +94,7 @@ void PaintFun::DrawCoordinate(
 		int i;
 		//start point and end point need to be special handled
 		int j = 1;
-		for (i = 4; i < TotalPointCnt - 1; i += 3)
+		for (i = 4; i < TotalPointCnt - 1; i += 3, ++j)
 		{
 			apt[i].x = (int)(((i - 1) / 3) * interlen + startpoint) + xlocation;
 			apt[i].y = apt[0].y;
