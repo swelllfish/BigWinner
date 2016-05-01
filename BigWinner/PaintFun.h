@@ -25,7 +25,15 @@ public:
 
 	void DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen);
 	void DrawFrame(HDC *hdc, RECT rect);
-	void DrawCoordinate(HDC *hdc, int xlocation, int ylocation, int len, int cnt, int start, unsigned char coortype, vector<string>::iterator TextString);
+	void DrawCoordinate(HDC *hdcBuffer, 
+	int xlocation, 
+	int ylocation, 
+	int start, 
+	int len,
+	int inter_len,
+	int total_cnt, 
+	unsigned char coortype,
+	vector<string>::iterator TextString);
 	HFONT CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle);
 };
 

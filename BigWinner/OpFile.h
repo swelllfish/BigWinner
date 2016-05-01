@@ -30,6 +30,7 @@ public:
 	bool Exit();
 	vector<U8>::iterator GetInfor_it(int SerNum, U8 BallNum, U8 Type);
 	vector<string>::iterator GetInfor_it(int SerNum, U8 Type);
+	int GetInfor_Capacity(U8 Type);
 private:
 	char *FileBuf;
 	long FileSize;

@@ -192,6 +192,32 @@ vector<string>::iterator OpFile::GetInfor_it(int SerNum, U8 Type)
 	return it_Infor;
 }
 
+int OpFile::GetInfor_Capacity(U8 Type)
+{
+	int cap;
+
+	switch(Type)
+	{
+	case DATA_NUM:
+		cap = numinfor.DateNum.size();
+		break;
+	case DATA:
+		cap = numinfor.Date.size();
+		break;
+	case SE_RED_BALL:
+		cap = numinfor.SequRed.size();
+		break;
+	case US_RED_BALL:
+		cap = numinfor.UnseqRed.size();
+		break;
+	case BLUE_BALL:
+		cap = numinfor.BlueBall.size();
+		break;
+	}
+
+	return cap;
+}
+
 bool OpFile::Exit()
 {
 	delete(FileBuf);

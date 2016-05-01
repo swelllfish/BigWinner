@@ -50,9 +50,10 @@ void PaintFun::DrawCoordinate(
 	HDC *hdcBuffer, 
 	int xlocation, 
 	int ylocation, 
-	int len, 
-	int cnt, 
 	int start, 
+	int len,
+	int inter_len,
+	int total_cnt, 
 	unsigned char coortype,
 	vector<string>::iterator TextString)
 {
@@ -64,85 +65,103 @@ void PaintFun::DrawCoordinate(
 
 	wchar_t *lpcText;
 	unsigned char TextLen = TextString->length();
+	int valueable_point_cnt = 0;
+	unsigned int start_point = 0xFFFF, end_point;
 
-	MoveToEx(*hdcBuffer, xlocation, ylocation, NULL);
-	float interlen = (float)len / (float)cnt;
-	int startpoint = start  % (int)interlen;
-
+	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (total_cnt + 1));		//add point 0
 	POINT *apt;
-
-	int TotalPointCnt = 3 * cnt + 2;
-	apt = (POINT *)malloc(sizeof(POINT) * (TotalPointCnt)); //start point and end point need to be special handled
 
 	if (coortype == HORZION_COOR)
 	{
+		total_apt[0] = xlocation - start;
+		if (total_apt[0] == xlocation)
+		{
+			start_point = 0;
+			valueable_point_cnt++;
+		}
+
+		for (int i = 1; i < total_cnt + 1; ++i)
+		{
+			total_apt[i] = (int)(i * inter_len) + total_apt[0];
+			if (total_apt[i] >= xlocation && total_apt[i] < xlocation + len)
+			{
+				valueable_point_cnt++;
+				if (start_point == 0xFFFF)
+				{
+					start_point = i;
+				}
+				end_point = i;
+			}
+		}
+		
+		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
+		
 		apt[0].x = xlocation;
 		apt[0].y = ylocation;
 
-		apt[1].x = xlocation + startpoint;
-		apt[1].y = ylocation;
-
-		apt[2].x = apt[1].x;
-		apt[2].y = apt[1].y - 5;
-
-		lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[0].length() + 1));
-		StringToLPCWSTR(TextString[0], lpcText);
-		TextOut(*hdcBuffer, apt[1].x, apt[1].y, lpcText, TextLen);
-		free(lpcText);
-
-		apt[3] = apt[1];
-		int i;
-		//start point and end point need to be special handled
-		int j = 1;
-		for (i = 4; i < TotalPointCnt - 1; i += 3, ++j)
+		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
-			apt[i].x = (int)(((i - 1) / 3) * interlen + startpoint) + xlocation;
-			apt[i].y = apt[0].y;
+			apt[i * 3 - 2].x = total_apt[start_point + i - 1];
+			apt[i * 3 - 2].y = apt[0].y;
 
-			apt[i + 1].x = apt[i].x;
-			apt[i + 1].y = apt[i].y - 5;
+			apt[i * 3 - 1].x = apt[i * 3 - 2].x;
+			apt[i * 3 - 1].y = apt[0].y - 5;
 
-			apt[i + 2] = apt[i];
+			apt[i * 3] = apt[i * 3 - 2];
 
-			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[j].length() + 1));
-			StringToLPCWSTR(TextString[j], lpcText);
-			TextOut(*hdcBuffer, apt[i].x, apt[i].y, lpcText, TextLen);
+			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
+			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
+			TextOut(*hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextLen);
 			free(lpcText);
 		}
-		apt[TotalPointCnt - 1].x = apt[TotalPointCnt - 2].x + (int)interlen - startpoint;
-		apt[TotalPointCnt - 1].y = ylocation;
+
+		apt[valueable_point_cnt * 3 + 1].x = xlocation + len;
+		apt[valueable_point_cnt * 3 + 1].y = ylocation;
 	}
 	else if (coortype == VERTICAL_COOR)
 	{
+		total_apt[0] = ylocation + start;
+		if (total_apt[0] == xlocation)
+		{
+			start_point = 0;
+		}
+
+		int i;
+		for (i = 1; i < total_cnt + 1; ++i)
+		{
+			total_apt[i] = total_apt[0] - (int)(i * inter_len);
+			if (total_apt[i] <= ylocation && total_apt[i] > ylocation - len)
+			{
+				valueable_point_cnt++;
+				if (start_point == 0xFFFF)
+				{
+					start_point = i;
+				}
+				end_point = i;
+			}
+		}
+
+		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 
 		apt[0].x = xlocation;
 		apt[0].y = ylocation;
 
-		apt[1].x = xlocation;
-		apt[1].y = ylocation - startpoint;
-
-		apt[2].x = apt[1].x + 5;
-		apt[2].y = apt[1].y;
-
-		apt[3] = apt[1];
-		int i;
-		//start point and end point need to be special handled
-		for (i = 4; i < TotalPointCnt - 1; i += 3)
+		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
-			apt[i].x = apt[0].x;
-			apt[i].y = ylocation - (int)(((i - 1) / 3) * interlen + startpoint);
+			apt[i * 3 - 2].x = apt[0].x;
+			apt[i * 3 - 2].y = total_apt[start_point + i - 1];
 
-			apt[i + 1].x = apt[i].x + 5;
-			apt[i + 1].y = apt[i].y;
+			apt[i * 3 - 1].x = apt[0].x + 5;
+			apt[i * 3 - 1].y = apt[i * 3 - 2].y;
 
-			apt[i + 2] = apt[i];
+			apt[i * 3] = apt[i * 3 - 2];
 		}
-		apt[TotalPointCnt - 1].x = xlocation;
-		apt[TotalPointCnt - 1].y = apt[TotalPointCnt - 2].y - (int)interlen + startpoint;
+
+		apt[valueable_point_cnt * 3 + 1].x = xlocation;
+		apt[valueable_point_cnt * 3 + 1].y = ylocation - len;
 	}
 
-	Polyline(*hdcBuffer, apt, TotalPointCnt);
-
+	Polyline(*hdcBuffer, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
 	DeleteObject(hDataFont);
 	DeleteObject(GetStockObject(BLACK_PEN));

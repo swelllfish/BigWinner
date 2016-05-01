@@ -48,22 +48,40 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	int xCoor_Len = ShowRect.right - ShowRect.left - 50;
 	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
 	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
+	static bool First_In = TRUE;
 
-	if (Mouse_xMove)
+	if (First_In)
 	{
-		int inter_len = (xCoor_Len) / PointCnt;
+		float inter_len = (float)xCoor_Len / (float)PointCnt;
+		Point_Start_Location = (int)(inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt));
+		First_In = FALSE;
+	}
+
+	if (Mouse_xMove != 0)
+	{	
+		float inter_len = (float)xCoor_Len / (float)PointCnt;
 		Point_Start_Location += Mouse_xMove;
 		Mouse_xMove = 0;
-		Point_Start_Location = Point_Start_Location > 0 ? Point_Start_Location % inter_len :Point_Start_Location % inter_len + inter_len;
+
+		if (Point_Start_Location < 0)
+		{
+			Point_Start_Location = 0;
+		}
+
+		if (Point_Start_Location > inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt))
+		{
+			Point_Start_Location = (int)(inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt));
+		}
 	}
 
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
 	paintfun.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
+		0, 
 		xCoor_Len, 
-		PointCnt, 
-		Point_Start_Location,
+		10,
+		p_opfile->GetInfor_Capacity(DATA_NUM),
 		HORZION_COOR,
 		it_string
 		);
@@ -71,9 +89,10 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	paintfun.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
-		yCoor_Len, 
-		33, 
-		ShowRect.bottom - ShowRect.top - 20 / 33,
+		0, 
+		ShowRect.bottom - ShowRect.top - 40, 
+		30,
+		33,
 		VERTICAL_COOR,
 		it_string
 		);
