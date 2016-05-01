@@ -2,8 +2,8 @@
 
 Analisis::Analisis(void)
 {
-	PointCnt = 7;
-	NewPointCnt = 7;
+	InterLen = 80;
+	NewInterLen = 80;
 
 	Pre_Mouse_Location.x = Pre_Mouse_Location.y = 0;
 	Now_Mouse_Location.x = Now_Mouse_Location.y = 0;
@@ -48,29 +48,20 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	int xCoor_Len = ShowRect.right - ShowRect.left - 50;
 	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
 	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
-	static bool First_In = TRUE;
-
-	if (First_In)
-	{
-		float inter_len = (float)xCoor_Len / (float)PointCnt;
-		Point_Start_Location = (int)(inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt));
-		First_In = FALSE;
-	}
 
 	if (Mouse_xMove != 0)
 	{	
-		float inter_len = (float)xCoor_Len / (float)PointCnt;
 		Point_Start_Location += Mouse_xMove;
 		Mouse_xMove = 0;
 
-		if (Point_Start_Location < 0)
+		if (Point_Start_Location > 0)
 		{
 			Point_Start_Location = 0;
 		}
 
-		if (Point_Start_Location > inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt))
+		if (Point_Start_Location < - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen))
 		{
-			Point_Start_Location = (int)(inter_len * (p_opfile->GetInfor_Capacity(DATA_NUM) - PointCnt));
+			Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen);
 		}
 	}
 
@@ -78,9 +69,9 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	paintfun.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
-		0, 
+		Point_Start_Location, 
 		xCoor_Len, 
-		10,
+		InterLen,
 		p_opfile->GetInfor_Capacity(DATA_NUM),
 		HORZION_COOR,
 		it_string
@@ -123,16 +114,16 @@ void Analisis::ChangeShowArea(short MouseWhell)
 {
 	if (MouseWhell < 0)	//scroll down
 	{
-		if (NewPointCnt < 170)
+		if (NewInterLen < 80)
 		{
-			NewPointCnt += 7;
+			NewInterLen += 10;
 		}
 	}
 	else if (MouseWhell > 0) //scroll up
 	{
-		if (NewPointCnt > 7)
+		if (NewInterLen > 10)
 		{
-			NewPointCnt -= 7;
+			NewInterLen -= 10;
 		}
 	}
 }
@@ -178,15 +169,15 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 
 void Analisis::InvalidateArea(HWND hwnd)
 {
-	if (NewPointCnt != PointCnt)
+	if (NewInterLen != InterLen)
 	{
-		if (NewPointCnt > PointCnt)
+		if (NewInterLen > InterLen)
 		{
-			PointCnt++;
+			InterLen++;
 		}
-		else if (NewPointCnt < PointCnt)
+		else if (NewInterLen < InterLen)
 		{
-			PointCnt--;
+			InterLen--;
 		}
 		InvalidateRect(hwnd, &WorkRect, FALSE);
 	}

@@ -23,8 +23,8 @@ private:
 	OpFile *p_opfile;
 	RECT  WorkRect;		//the Window size
 	RECT  ShowRect;		//Table size
-	int   PointCnt;		//Old Horrizon coordinate point cnt
-	int   NewPointCnt;	//Horrizon coordinate point cnt
+	int   InterLen;		//Old Horrizon coordinate point cnt
+	int   NewInterLen;	//Horrizon coordinate point cnt
 	bool  LButton_Down_Flag;
 	bool  Slide_Flag;
 	POINT Pre_Mouse_Location;

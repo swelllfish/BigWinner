@@ -73,7 +73,7 @@ void PaintFun::DrawCoordinate(
 
 	if (coortype == HORZION_COOR)
 	{
-		total_apt[0] = xlocation - start;
+		total_apt[0] = xlocation + start;
 		if (total_apt[0] == xlocation)
 		{
 			start_point = 0;
@@ -120,7 +120,7 @@ void PaintFun::DrawCoordinate(
 	}
 	else if (coortype == VERTICAL_COOR)
 	{
-		total_apt[0] = ylocation + start;
+		total_apt[0] = ylocation - start;
 		if (total_apt[0] == xlocation)
 		{
 			start_point = 0;
