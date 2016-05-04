@@ -48,6 +48,13 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	int xCoor_Len = ShowRect.right - ShowRect.left - 50;
 	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
 	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
+	static bool First_In = TRUE;
+
+	if (First_In)
+	{
+		Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
+		First_In = FALSE;
+	}
 
 	if (Mouse_xMove != 0)
 	{	
@@ -59,9 +66,9 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 			Point_Start_Location = 0;
 		}
 
-		if (Point_Start_Location < - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen))
+		if (Point_Start_Location < - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len))
 		{
-			Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen);
+			Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
 		}
 	}
 
@@ -82,7 +89,7 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 		Start_Point.y,
 		0, 
 		ShowRect.bottom - ShowRect.top - 40, 
-		30,
+		(ShowRect.bottom - ShowRect.top - 40) / 33, 
 		33,
 		VERTICAL_COOR,
 		it_string
