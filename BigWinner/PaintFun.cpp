@@ -71,6 +71,11 @@ void PaintFun::DrawCoordinate(
 	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (total_cnt + 1));		//add point 0
 	POINT *apt;
 
+	if ((total_cnt * inter_len - len) < 0)
+	{
+		len = total_cnt * inter_len;
+	}
+
 	if (start > 0)
 	{
 		start = 0;
@@ -82,8 +87,9 @@ void PaintFun::DrawCoordinate(
 
 	if (coortype == HORZION_COOR)
 	{
-		total_apt[0] = xlocation + start;
-		if (total_apt[0] == xlocation)
+		//calculate point location
+		total_apt[0] = start;
+		if (total_apt[0] == 0)
 		{
 			start_point = 0;
 			valueable_point_cnt++;
@@ -92,7 +98,7 @@ void PaintFun::DrawCoordinate(
 		for (int i = 1; i < total_cnt + 1; ++i)
 		{
 			total_apt[i] = (int)(i * inter_len) + total_apt[0];
-			if (total_apt[i] >= xlocation && total_apt[i] < xlocation + len)
+			if (total_apt[i] >= 0 && total_apt[i] < len)
 			{
 				valueable_point_cnt++;
 				if (start_point == 0xFFFF)
@@ -111,7 +117,7 @@ void PaintFun::DrawCoordinate(
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
-			apt[i * 3 - 2].x = total_apt[start_point + i - 1];
+			apt[i * 3 - 2].x = total_apt[start_point + i - 1] + xlocation;
 			apt[i * 3 - 2].y = apt[0].y;
 
 			apt[i * 3 - 1].x = apt[i * 3 - 2].x;
@@ -130,8 +136,8 @@ void PaintFun::DrawCoordinate(
 	}
 	else if (coortype == VERTICAL_COOR)
 	{
-		total_apt[0] = ylocation - start;
-		if (total_apt[0] == xlocation)
+		total_apt[0] = - start;
+		if (total_apt[0] == ylocation)
 		{
 			start_point = 0;
 		}
@@ -140,7 +146,7 @@ void PaintFun::DrawCoordinate(
 		for (i = 1; i < total_cnt + 1; ++i)
 		{
 			total_apt[i] = total_apt[0] - (int)(i * inter_len);
-			if (total_apt[i] <= ylocation && total_apt[i] > ylocation - len)
+			if (total_apt[i] <= 0 && total_apt[i] >= - len)
 			{
 				valueable_point_cnt++;
 				if (start_point == 0xFFFF)
@@ -159,7 +165,7 @@ void PaintFun::DrawCoordinate(
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
 			apt[i * 3 - 2].x = apt[0].x;
-			apt[i * 3 - 2].y = total_apt[start_point + i - 1];
+			apt[i * 3 - 2].y = total_apt[start_point + i - 1] + ylocation;
 
 			apt[i * 3 - 1].x = apt[0].x + 5;
 			apt[i * 3 - 1].y = apt[i * 3 - 2].y;

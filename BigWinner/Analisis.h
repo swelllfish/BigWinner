@@ -27,6 +27,7 @@ private:
 	int   NewInterLen;	//Horrizon coordinate point cnt
 	bool  LButton_Down_Flag;
 	bool  Slide_Flag;
+	bool  Zoom_Change;
 	POINT Pre_Mouse_Location;
 	POINT Now_Mouse_Location;
 	int   Mouse_xMove;	//Table move follow the cursor

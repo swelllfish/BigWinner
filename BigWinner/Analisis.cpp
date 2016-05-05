@@ -49,19 +49,22 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
 	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
 	static bool First_In = TRUE;
-	int End_Point = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
+	int Total_Len = p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen;
+	int End_Point = - (Total_Len - xCoor_Len);
 
 	if (First_In)
 	{
+		//start form the end point of the data
 		Point_Start_Location = End_Point;
 		First_In = FALSE;
 	}
 
 	if (Mouse_xMove != 0)
-	{	
+	{
 		Point_Start_Location += Mouse_xMove;
 		Mouse_xMove = 0;
 
+		//restrict the Coordinate axes
 		if (Point_Start_Location > 0)
 		{
 			Point_Start_Location = 0;
@@ -120,18 +123,18 @@ void Analisis::SetWorkSpaceArea(int x, int y)
 
 void Analisis::ChangeShowArea(short MouseWhell)
 {
-	if (MouseWhell < 0)	//scroll down
-	{
-		if (NewInterLen < 80)
-		{
-			NewInterLen += 10;
-		}
-	}
-	else if (MouseWhell > 0) //scroll up
+	if (MouseWhell < 0)	//scroll down to zoom out
 	{
 		if (NewInterLen > 10)
 		{
 			NewInterLen -= 10;
+		}
+	}
+	else if (MouseWhell > 0) //scroll up to zoom in
+	{
+		if (NewInterLen < 80)
+		{
+			NewInterLen += 10;
 		}
 	}
 }
@@ -143,7 +146,7 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 	case WM_LBUTTONDOWN:
 		LButton_Down_Flag = TRUE;
 		Slide_Flag = FALSE;
-		SetCapture(hwnd);
+		SetCapture(hwnd);	//capture cursor outside window
 		break;
 
 	case WM_LBUTTONUP:
@@ -154,14 +157,14 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 		{
 			Slide_Flag = TRUE;
 		}
-		ReleaseCapture();
+		ReleaseCapture();	//release cursor
 		break;
 
 	case WM_MOUSEMOVE:
 		Pre_Mouse_Location = Now_Mouse_Location;
 		Now_Mouse_Location.x = x;
 		Now_Mouse_Location.y = y;
-
+		//calculate moving pixel
 		if (LButton_Down_Flag)
 		{
 			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
@@ -186,7 +189,12 @@ void Analisis::InvalidateArea(HWND hwnd)
 		{
 			InterLen--;
 		}
+		Zoom_Change = TRUE;
 		InvalidateRect(hwnd, &WorkRect, FALSE);
+	}
+	else
+	{
+		Zoom_Change = FALSE;
 	}
 
 	if (Slide_Flag)
