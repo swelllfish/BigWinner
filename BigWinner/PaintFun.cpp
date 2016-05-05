@@ -71,6 +71,15 @@ void PaintFun::DrawCoordinate(
 	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (total_cnt + 1));		//add point 0
 	POINT *apt;
 
+	if (start > 0)
+	{
+		start = 0;
+	}
+	if (start <  - (total_cnt * inter_len - len))
+	{
+		start =  - (total_cnt * inter_len - len);
+	}
+
 	if (coortype == HORZION_COOR)
 	{
 		total_apt[0] = xlocation + start;
@@ -93,11 +102,12 @@ void PaintFun::DrawCoordinate(
 				end_point = i;
 			}
 		}
-		
+
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 		
 		apt[0].x = xlocation;
 		apt[0].y = ylocation;
+
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
@@ -163,6 +173,7 @@ void PaintFun::DrawCoordinate(
 
 	Polyline(*hdcBuffer, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
+	free(total_apt);
 	DeleteObject(hDataFont);
 	DeleteObject(GetStockObject(BLACK_PEN));
 	delete(hDataFont);

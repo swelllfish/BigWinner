@@ -13,7 +13,7 @@ public:
 	void DrawBackGround(HDC *hdc);
 	void SetWorkSpaceArea(int x, int y);
 	void ChangeShowArea(short MouseWhell);
-	void MouseAction(HWND hwnd, int x, int y, unsigned short act_type);
+	void MouseAction(HWND hwnd, short x, short y, unsigned short act_type);
 	void DrawCoordinate(HDC *hdc);
 	void InvalidateArea(HWND hwnd);
 	void Exit();

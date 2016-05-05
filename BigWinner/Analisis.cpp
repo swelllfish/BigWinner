@@ -49,10 +49,11 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
 	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
 	static bool First_In = TRUE;
+	int End_Point = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
 
 	if (First_In)
 	{
-		Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
+		Point_Start_Location = End_Point;
 		First_In = FALSE;
 	}
 
@@ -66,9 +67,9 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 			Point_Start_Location = 0;
 		}
 
-		if (Point_Start_Location < - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len))
+		if (Point_Start_Location < End_Point)
 		{
-			Point_Start_Location = - (p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen - xCoor_Len);
+			Point_Start_Location = End_Point;
 		}
 	}
 
@@ -135,7 +136,7 @@ void Analisis::ChangeShowArea(short MouseWhell)
 	}
 }
 
-void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
+void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 {
 	switch(act_type)
 	{
@@ -164,7 +165,6 @@ void Analisis::MouseAction(HWND hwnd, int x, int y, unsigned short act_type)
 		if (LButton_Down_Flag)
 		{
 			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
-
 			InvalidateRect(hwnd, &WorkRect, FALSE);
 		}
 		break;
