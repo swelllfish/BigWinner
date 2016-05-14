@@ -63,17 +63,31 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 	{
 		Point_Start_Location += Mouse_xMove;
 		Mouse_xMove = 0;
+	}
 
-		//restrict the Coordinate axes
-		if (Point_Start_Location > 0)
-		{
-			Point_Start_Location = 0;
-		}
+	if (Zoom_Change != WHELL_ZOOM_NON)
+	{
+		int point_num = (Whell_Mouse_Location.x - Start_Point.x - Point_Start_Location) / PreInterLen;
 
-		if (Point_Start_Location < End_Point)
+		if (Zoom_Change == WHELL_ZOOM_IN)
 		{
-			Point_Start_Location = End_Point;
+			Point_Start_Location -= point_num * INTER_LEN_CHANGE;
 		}
+		else if (Zoom_Change == WHELL_ZOOM_OUT)
+		{
+			Point_Start_Location += point_num * INTER_LEN_CHANGE;
+		}
+	}
+
+	//restrict the Coordinate axes
+	if (Point_Start_Location > 0)
+	{
+		Point_Start_Location = 0;
+	}
+
+	if (Point_Start_Location < End_Point)
+	{
+		Point_Start_Location = End_Point;
 	}
 
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
@@ -123,6 +137,7 @@ void Analisis::SetWorkSpaceArea(int x, int y)
 
 void Analisis::ChangeShowArea(short MouseWhell)
 {
+	Whell_Mouse_Location = Now_Mouse_Location;
 	if (MouseWhell < 0)	//scroll down to zoom out
 	{
 		if (NewInterLen > 10)
@@ -181,20 +196,23 @@ void Analisis::InvalidateArea(HWND hwnd)
 {
 	if (NewInterLen != InterLen)
 	{
+		PreInterLen = InterLen;
+
 		if (NewInterLen > InterLen)
 		{
-			InterLen++;
+			InterLen += INTER_LEN_CHANGE;
+			Zoom_Change = WHELL_ZOOM_IN;
 		}
 		else if (NewInterLen < InterLen)
 		{
-			InterLen--;
+			InterLen -= INTER_LEN_CHANGE;
+			Zoom_Change = WHELL_ZOOM_OUT;
 		}
-		Zoom_Change = TRUE;
 		InvalidateRect(hwnd, &WorkRect, FALSE);
 	}
 	else
 	{
-		Zoom_Change = FALSE;
+		Zoom_Change = WHELL_ZOOM_NON;
 	}
 
 	if (Slide_Flag)
