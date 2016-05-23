@@ -2,13 +2,13 @@
 
 Analisis::Analisis(void)
 {
-	InterLen = 80;
-	NewInterLen = 80;
+	nowInterLen = 80;
+	newInterLen = 80;
 
-	Pre_Mouse_Location.x = Pre_Mouse_Location.y = 0;
-	Now_Mouse_Location.x = Now_Mouse_Location.y = 0;
-	Mouse_xMove = 0;
-	Point_Start_Location = 0;
+	preMouseLocation.x = preMouseLocation.y = 0;
+	nowMouseLocation.x = nowMouseLocation.y = 0;
+	mouseMove_x = 0;
+	tableStartPoint_x = 0;
 }
 
 Analisis::~Analisis(void)
@@ -34,7 +34,7 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 
 	DrawCoordinate(hdcBuffer);
 
-	BitBlt(*hdc, WorkRect.left, WorkRect.top, WorkRect.right, WorkRect.bottom, *hdcBuffer, WorkRect.left, WorkRect.top, SRCCOPY);
+	BitBlt(*hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, *hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
 
 	DeleteObject(*bitmapBuff);
 	DeleteDC(*hdcBuffer);
@@ -45,58 +45,58 @@ void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
 void Analisis::DrawCoordinate(HDC *hdcBuffer)
 {
 	PaintFun paintfun;
-	int xCoor_Len = ShowRect.right - ShowRect.left - 50;
-	int yCoor_Len = ShowRect.bottom - ShowRect.top - 20;
-	POINT Start_Point = {ShowRect.left + 10, ShowRect.bottom - 20};
+	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 50;
+	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 20;
+	POINT Start_Point = {tableAreaRect.left + 10, tableAreaRect.bottom - 20};
 	static bool First_In = TRUE;
-	int Total_Len = p_opfile->GetInfor_Capacity(DATA_NUM) * InterLen;
+	int Total_Len = p_opfile->GetInfor_Capacity(DATA_NUM) * nowInterLen;
 	int End_Point = - (Total_Len - xCoor_Len);
 
 	if (First_In)
 	{
 		//start form the end point of the data
-		Point_Start_Location = End_Point;
+		tableStartPoint_x = End_Point;
 		First_In = FALSE;
 	}
 
-	if (Mouse_xMove != 0)
+	if (mouseMove_x != 0)
 	{
-		Point_Start_Location += Mouse_xMove;
-		Mouse_xMove = 0;
+		tableStartPoint_x += mouseMove_x;
+		mouseMove_x = 0;
 	}
 
-	if (Zoom_Change != WHELL_ZOOM_NON)
+	if (zoomWhellChange != WHELL_ZOOM_NON)
 	{
-		int point_num = (Whell_Mouse_Location.x - Start_Point.x - Point_Start_Location) / PreInterLen;
+		int point_num = (whellMouseLocation.x - Start_Point.x - tableStartPoint_x) / preInterLen;
 
-		if (Zoom_Change == WHELL_ZOOM_IN)
+		if (zoomWhellChange == WHELL_ZOOM_IN)
 		{
-			Point_Start_Location -= point_num * INTER_LEN_CHANGE;
+			tableStartPoint_x -= point_num * INTER_LEN_CHANGE;
 		}
-		else if (Zoom_Change == WHELL_ZOOM_OUT)
+		else if (zoomWhellChange == WHELL_ZOOM_OUT)
 		{
-			Point_Start_Location += point_num * INTER_LEN_CHANGE;
+			tableStartPoint_x += point_num * INTER_LEN_CHANGE;
 		}
 	}
 
 	//restrict the Coordinate axes
-	if (Point_Start_Location > 0)
+	if (tableStartPoint_x > 0)
 	{
-		Point_Start_Location = 0;
+		tableStartPoint_x = 0;
 	}
 
-	if (Point_Start_Location < End_Point)
+	if (tableStartPoint_x < End_Point)
 	{
-		Point_Start_Location = End_Point;
+		tableStartPoint_x = End_Point;
 	}
 
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
 	paintfun.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
-		Point_Start_Location, 
+		tableStartPoint_x, 
 		xCoor_Len, 
-		InterLen,
+		nowInterLen,
 		p_opfile->GetInfor_Capacity(DATA_NUM),
 		HORZION_COOR,
 		it_string
@@ -106,8 +106,8 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 		Start_Point.x,
 		Start_Point.y,
 		0, 
-		ShowRect.bottom - ShowRect.top - 40, 
-		(ShowRect.bottom - ShowRect.top - 40) / 33, 
+		tableAreaRect.bottom - tableAreaRect.top - 40, 
+		(tableAreaRect.bottom - tableAreaRect.top - 40) / 33, 
 		33,
 		VERTICAL_COOR,
 		it_string
@@ -118,38 +118,38 @@ void Analisis::DrawBackGround(HDC *hdcBuffer)
 {
 	PaintFun paintfun;
 
-	paintfun.DrawRect(hdcBuffer, BRUSH_BLUE, WorkRect, NULL_PEN);	//window background
-	paintfun.DrawFrame(hdcBuffer, ShowRect);
+	paintfun.DrawRect(hdcBuffer, BRUSH_BLUE, windowAreaRect, NULL_PEN);	//window background
+	paintfun.DrawFrame(hdcBuffer, tableAreaRect);
 }
 
 void Analisis::SetWorkSpaceArea(int x, int y)
 {
-	WorkRect.top = 0;
-	WorkRect.left = 0;
-	WorkRect.right = x;
-	WorkRect.bottom = y;
+	windowAreaRect.top = 0;
+	windowAreaRect.left = 0;
+	windowAreaRect.right = x;
+	windowAreaRect.bottom = y;
 
-	ShowRect.top = WorkRect.bottom / 5;
-	ShowRect.bottom = ShowRect.top + 33 * 20;  //every number has 20 pixel
-	ShowRect.left = WorkRect.left + 50;
-	ShowRect.right = WorkRect.right - 50;
+	tableAreaRect.top = windowAreaRect.bottom / 5;
+	tableAreaRect.bottom = tableAreaRect.top + 33 * 20;  //every number has 20 pixel
+	tableAreaRect.left = windowAreaRect.left + 50;
+	tableAreaRect.right = windowAreaRect.right - 50;
 }
 
 void Analisis::ChangeShowArea(short MouseWhell)
 {
-	Whell_Mouse_Location = Now_Mouse_Location;
+	whellMouseLocation = nowMouseLocation;
 	if (MouseWhell < 0)	//scroll down to zoom out
 	{
-		if (NewInterLen > 10)
+		if (newInterLen > 10)
 		{
-			NewInterLen -= 10;
+			newInterLen -= 10;
 		}
 	}
 	else if (MouseWhell > 0) //scroll up to zoom in
 	{
-		if (NewInterLen < 80)
+		if (newInterLen < 80)
 		{
-			NewInterLen += 10;
+			newInterLen += 10;
 		}
 	}
 }
@@ -159,31 +159,31 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 	switch(act_type)
 	{
 	case WM_LBUTTONDOWN:
-		LButton_Down_Flag = TRUE;
-		Slide_Flag = FALSE;
+		lButtonDownFlag = TRUE;
+		tableSlideFlag = FALSE;
 		SetCapture(hwnd);	//capture cursor outside window
 		break;
 
 	case WM_LBUTTONUP:
-		LButton_Down_Flag = FALSE;
-		Slide_xMove = (double)(Now_Mouse_Location.x - Pre_Mouse_Location.x);
+		lButtonDownFlag = FALSE;
+		tableSlideMove_x = (double)(nowMouseLocation.x - preMouseLocation.x);
 
-		if (abs(Slide_xMove) >= 3)
+		if (abs(tableSlideMove_x) >= 3)
 		{
-			Slide_Flag = TRUE;
+			tableSlideFlag = TRUE;
 		}
 		ReleaseCapture();	//release cursor
 		break;
 
 	case WM_MOUSEMOVE:
-		Pre_Mouse_Location = Now_Mouse_Location;
-		Now_Mouse_Location.x = x;
-		Now_Mouse_Location.y = y;
+		preMouseLocation = nowMouseLocation;
+		nowMouseLocation.x = x;
+		nowMouseLocation.y = y;
 		//calculate moving pixel
-		if (LButton_Down_Flag)
+		if (lButtonDownFlag)
 		{
-			Mouse_xMove = Now_Mouse_Location.x - Pre_Mouse_Location.x;
-			InvalidateRect(hwnd, &WorkRect, FALSE);
+			mouseMove_x = nowMouseLocation.x - preMouseLocation.x;
+			InvalidateRect(hwnd, &windowAreaRect, FALSE);
 		}
 		break;
 
@@ -194,36 +194,36 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 
 void Analisis::InvalidateArea(HWND hwnd)
 {
-	if (NewInterLen != InterLen)
+	if (newInterLen != nowInterLen)
 	{
-		PreInterLen = InterLen;
+		preInterLen = nowInterLen;
 
-		if (NewInterLen > InterLen)
+		if (newInterLen > nowInterLen)
 		{
-			InterLen += INTER_LEN_CHANGE;
-			Zoom_Change = WHELL_ZOOM_IN;
+			nowInterLen += INTER_LEN_CHANGE;
+			zoomWhellChange = WHELL_ZOOM_IN;
 		}
-		else if (NewInterLen < InterLen)
+		else if (newInterLen < nowInterLen)
 		{
-			InterLen -= INTER_LEN_CHANGE;
-			Zoom_Change = WHELL_ZOOM_OUT;
+			nowInterLen -= INTER_LEN_CHANGE;
+			zoomWhellChange = WHELL_ZOOM_OUT;
 		}
-		InvalidateRect(hwnd, &WorkRect, FALSE);
+		InvalidateRect(hwnd, &windowAreaRect, FALSE);
 	}
 	else
 	{
-		Zoom_Change = WHELL_ZOOM_NON;
+		zoomWhellChange = WHELL_ZOOM_NON;
 	}
 
-	if (Slide_Flag)
+	if (tableSlideFlag)
 	{
-		Mouse_xMove = (int)Slide_xMove;
-		InvalidateRect(hwnd, &WorkRect, FALSE);
-		Slide_xMove *= 0.9;
-		if (abs(Slide_xMove) < 2)
+		mouseMove_x = (int)tableSlideMove_x;
+		InvalidateRect(hwnd, &windowAreaRect, FALSE);
+		tableSlideMove_x *= 0.9;
+		if (abs(tableSlideMove_x) < 2)
 		{
-			Slide_Flag = FALSE;
-			Slide_xMove = 0;
+			tableSlideFlag = FALSE;
+			tableSlideMove_x = 0;
 		}
 	}
 }
