@@ -1,5 +1,4 @@
 #include "stdafx.h"
-
 /**Bigwinner register window main function**/
 
 #define ID_TIMER 1
@@ -59,7 +58,6 @@ WNDCLASS SetWndClass(HINSTANCE hInstance, TCHAR szAppName[])
 	wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndclass.lpszMenuName = NULL;
 	wndclass.lpszClassName = (LPCWSTR)szAppName;
-
 	return wndclass;
 }
 
@@ -74,28 +72,36 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		SetTimer(hwnd, ID_TIMER, TIMER_CLK, NULL);
+		hdc = new HDC;
+		*hdc = GetDC(hwnd);
+
 		opfile.FileAnalise();
 		analisis.GetFilePoint(&opfile);
+		analisis.DrawBackGround(hdc);
+		analisis.CreateWindowButton(hwnd, ((LPCREATESTRUCT) lParam)->hInstance);
+
+		ReleaseDC(hwnd, *hdc);
+		delete(hdc);
 		return 0;
 
 	case WM_SIZE:
-		hdc = new HDC;
-		*hdc = GetDC(hwnd);
 		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
-		ReleaseDC(hwnd, *hdc);
-		delete(hdc);
 		return 0;
 		
 	case WM_PAINT:
 		hdc = new HDC;
 		*hdc = BeginPaint(hwnd, &ps);
-		analisis.ShowTable(hdc, &opfile);
+		analisis.ShowTable(hdc);
 		EndPaint(hwnd, &ps);
 		delete(hdc);
 		return 0;
 
 	case WM_MOUSEWHEEL:
 		analisis.ChangeShowArea(HIWORD(wParam));
+		return 0;
+
+	case WM_DRAWITEM:
+		analisis.DrawButton((LPDRAWITEMSTRUCT)lParam);
 		return 0;
 
 	case WM_LBUTTONDOWN:

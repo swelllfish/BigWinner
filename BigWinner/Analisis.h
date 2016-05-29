@@ -9,6 +9,7 @@
 
 #define	INTER_LEN_CHANGE	(1)
 
+#define ID_BUTTON1			(1)
 
 class Analisis
 {
@@ -16,8 +17,10 @@ public:
 	Analisis(void);
 	~Analisis(void);
 
+	void CreateWindowButton(HWND hwnd, HINSTANCE hInstance);
+	void DrawButton(LPDRAWITEMSTRUCT pdis);
 	void GetFilePoint(OpFile *opfile);
-	void ShowTable(HDC *hdc, OpFile *opfile);
+	void ShowTable(HDC *hdc);
 	void DrawBackGround(HDC *hdc);
 	void SetWorkSpaceArea(int x, int y);
 	void ChangeShowArea(short MouseWhell);

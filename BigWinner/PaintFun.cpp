@@ -11,10 +11,11 @@ PaintFun::~PaintFun(void)
 }
 
 
-void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen)
+void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, COLORREF pen)
 {
 	HBRUSH hBrush = CreateSolidBrush(color);
-	SelectObject(*hdcBuffer, GetStockObject(pen));
+	HPEN hPen = CreatePen(PS_SOLID, 1, pen);
+	SelectObject(*hdcBuffer, hPen);
 	SelectObject(*hdcBuffer, hBrush);
 	Rectangle(*hdcBuffer, 
 		rect.left, 
@@ -22,6 +23,7 @@ void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, char pen)
 		rect.right, 
 		rect.bottom
 		);
+	DeleteObject(hPen);
 	DeleteObject(hBrush);
 }
 
@@ -31,17 +33,17 @@ void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
 	rect.top += 3;
 	rect.right += 3; 
 	rect.bottom += 3;
-	DrawRect(hdcBuffer, BRUSH_BLACK, rect, NULL_PEN);
+	DrawRect(hdcBuffer, BRUSH_BLACK, rect, BRUSH_BLACK);
 	rect.left -= 4;
 	rect.top -= 4;
 	rect.right -= 2; 
 	rect.bottom -= 2;
-	DrawRect(hdcBuffer, BRUSH_GRAY, rect, NULL_PEN);
+	DrawRect(hdcBuffer, BRUSH_GRAY, rect, BRUSH_GRAY);
 	rect.left += 1;
 	rect.top += 1;
 	rect.right -= 1; 
 	rect.bottom -= 1;
-	DrawRect(hdcBuffer, BRUSH_WHITE, rect, NULL_PEN);
+	DrawRect(hdcBuffer, BRUSH_WHITE, rect, BRUSH_WHITE);
 }
 
 //Draw Horizon coordinnate
@@ -207,3 +209,38 @@ HFONT PaintFun::CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int a
 	return hFont;
 }
 
+HWND PaintFun::CreateButton(int x, int y, int width, int length, HWND parent_hwnd, HINSTANCE hInstance, int ID)
+{
+	return CreateWindow(TEXT("button"), TEXT(""), WS_CHILD | WS_VISIBLE | BS_OWNERDRAW, x, y, width, length, parent_hwnd, (HMENU)ID, hInstance, NULL);
+}
+
+void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
+{
+	TEXTMETRIC tm;
+	GetTextMetrics(pdis->hDC, &tm);
+	int xText = (pdis->rcItem.right - pdis->rcItem.left) / 2 - (((tm.tmAveCharWidth + tm.tmMaxCharWidth) / 2) * textnum) / 2;
+	int yText = (pdis->rcItem.bottom - pdis->rcItem.top) / 2 - tm.tmHeight / 2;
+	DrawRect(&pdis->hDC, BRUSH_LIGHT_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
+	SetBkColor(pdis->hDC, BRUSH_LIGHT_GRAY);
+	TextOut(pdis->hDC, xText, yText, text, 4);
+
+	if (pdis->itemState & ODS_SELECTED)
+	{
+		DrawRect(&pdis->hDC, BRUSH_DEEP_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
+		SetBkColor(pdis->hDC, BRUSH_DEEP_GRAY);
+		TextOut(pdis->hDC, xText, yText, text, 4);
+	}
+
+// 	if (pdis->itemState & ODS_FOCUS)  
+// 	{
+// 		int cx = pdis->rcItem.right  - pdis->rcItem.left ;  
+// 		int cy = pdis->rcItem.bottom - pdis->rcItem.top  ;  
+// 
+// 		pdis->rcItem.left  += cx / 16;  
+// 		pdis->rcItem.top   +=  cy / 16;  
+// 		pdis->rcItem.right -=  cx / 16;  
+// 		pdis->rcItem.bottom-=  cy / 16;  
+// 
+// 		DrawFocusRect  (pdis->hDC, &pdis->rcItem) ;  
+// 	}  
+}

@@ -15,27 +15,40 @@ Analisis::~Analisis(void)
 {
 }
 
+void Analisis::CreateWindowButton(HWND hwnd, HINSTANCE hInstance)
+{
+	PaintFun paintfun;
+	paintfun.CreateButton(10, 10, 80, 40, hwnd, hInstance, ID_BUTTON1);
+}
+
+void Analisis::DrawButton(LPDRAWITEMSTRUCT pdis)
+{
+	PaintFun paintfun;
+	paintfun.DrawButton(pdis, TEXT("hehe"), 4);
+}
+
 void Analisis::GetFilePoint(OpFile *opfile)
 {
 	p_opfile = opfile;
 }
 
-void Analisis::ShowTable(HDC *hdc, OpFile *opfile)
+void Analisis::ShowTable(HDC *hdc)
 {
 	HDC *hdcBuffer = new HDC;
 	HBITMAP *bitmapBuff = new HBITMAP;
+	HBITMAP prebitmap;
 	PaintFun paintfun;
 
 	*bitmapBuff =  CreateCompatibleBitmap(*hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	*hdcBuffer = CreateCompatibleDC(*hdc);
-	SelectObject(*hdcBuffer, *bitmapBuff);
+	prebitmap = (HBITMAP)SelectObject(*hdcBuffer, *bitmapBuff);
 
 	DrawBackGround(hdcBuffer);
-
 	DrawCoordinate(hdcBuffer);
 
 	BitBlt(*hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, *hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
 
+	SelectObject(*hdcBuffer, prebitmap);
 	DeleteObject(*bitmapBuff);
 	DeleteDC(*hdcBuffer);
 	delete(bitmapBuff);
@@ -183,7 +196,7 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 		if (lButtonDownFlag)
 		{
 			mouseMove_x = nowMouseLocation.x - preMouseLocation.x;
-			InvalidateRect(hwnd, &windowAreaRect, FALSE);
+			InvalidateRect(hwnd, &tableAreaRect, FALSE);
 		}
 		break;
 
@@ -208,7 +221,7 @@ void Analisis::InvalidateArea(HWND hwnd)
 			nowInterLen -= INTER_LEN_CHANGE;
 			zoomWhellChange = WHELL_ZOOM_OUT;
 		}
-		InvalidateRect(hwnd, &windowAreaRect, FALSE);
+		InvalidateRect(hwnd, &tableAreaRect, FALSE);
 	}
 	else
 	{
@@ -218,7 +231,7 @@ void Analisis::InvalidateArea(HWND hwnd)
 	if (tableSlideFlag)
 	{
 		mouseMove_x = (int)tableSlideMove_x;
-		InvalidateRect(hwnd, &windowAreaRect, FALSE);
+		InvalidateRect(hwnd, &tableAreaRect, FALSE);
 		tableSlideMove_x *= 0.9;
 		if (abs(tableSlideMove_x) < 2)
 		{
