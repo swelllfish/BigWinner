@@ -59,9 +59,9 @@ void PaintFun::DrawCoordinate(
 	unsigned char coortype,
 	vector<string>::iterator TextString)
 {
-	HFONT *hDataFont = new HFONT;
-	*hDataFont = CreateMyFont(*hdcBuffer, (LPCTSTR)("ËÎÌå"), 10, 10, -60);
-	SelectObject(*hdcBuffer, hDataFont);
+	HFONT hPreFont, hDataFont;
+	hDataFont = CreateMyFont(*hdcBuffer, (LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
+	hPreFont = (HFONT)SelectObject(*hdcBuffer, hDataFont);
 	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
 	SetBkColor(*hdcBuffer, BRUSH_WHITE);
 
@@ -182,9 +182,9 @@ void PaintFun::DrawCoordinate(
 	Polyline(*hdcBuffer, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
 	free(total_apt);
+	SelectObject(*hdcBuffer, hPreFont);
 	DeleteObject(hDataFont);
 	DeleteObject(GetStockObject(BLACK_PEN));
-	delete(hDataFont);
 }
 
 HFONT PaintFun::CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle)
@@ -218,29 +218,22 @@ void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
 {
 	TEXTMETRIC tm;
 	GetTextMetrics(pdis->hDC, &tm);
-	int xText = (pdis->rcItem.right - pdis->rcItem.left) / 2 - (((tm.tmAveCharWidth + tm.tmMaxCharWidth) / 2) * textnum) / 2;
-	int yText = (pdis->rcItem.bottom - pdis->rcItem.top) / 2 - tm.tmHeight / 2;
+	int xText = ((pdis->rcItem.right - pdis->rcItem.left) / 2) - (13 * textnum) / 2;
+	int yText = (pdis->rcItem.bottom - pdis->rcItem.top) / 2 - 13 / 2;
 	DrawRect(&pdis->hDC, BRUSH_LIGHT_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
 	SetBkColor(pdis->hDC, BRUSH_LIGHT_GRAY);
-	TextOut(pdis->hDC, xText, yText, text, 4);
+	
+	HFONT hFont, hPreFont;
+	hFont = CreateMyFont(pdis->hDC, (LPCTSTR)("Î¢ÈíÑÅºÚ"), 7, 13, 0);
+	hPreFont = (HFONT)SelectObject(pdis->hDC, hFont);
+	TextOut(pdis->hDC, xText, yText, text, textnum);
 
 	if (pdis->itemState & ODS_SELECTED)
 	{
 		DrawRect(&pdis->hDC, BRUSH_DEEP_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
 		SetBkColor(pdis->hDC, BRUSH_DEEP_GRAY);
-		TextOut(pdis->hDC, xText, yText, text, 4);
+		TextOut(pdis->hDC, xText, yText, text, textnum);
 	}
-
-// 	if (pdis->itemState & ODS_FOCUS)  
-// 	{
-// 		int cx = pdis->rcItem.right  - pdis->rcItem.left ;  
-// 		int cy = pdis->rcItem.bottom - pdis->rcItem.top  ;  
-// 
-// 		pdis->rcItem.left  += cx / 16;  
-// 		pdis->rcItem.top   +=  cy / 16;  
-// 		pdis->rcItem.right -=  cx / 16;  
-// 		pdis->rcItem.bottom-=  cy / 16;  
-// 
-// 		DrawFocusRect  (pdis->hDC, &pdis->rcItem) ;  
-// 	}  
+	SelectObject(pdis->hDC, hPreFont);
+	DeleteObject(hFont);
 }

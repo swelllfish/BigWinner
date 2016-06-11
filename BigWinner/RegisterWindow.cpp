@@ -66,6 +66,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC *hdc;
 	static OpFile opfile;
 	static Analisis analisis;
+	static HINSTANCE hInstance;
 	PAINTSTRUCT ps;
 
 	switch(message)
@@ -78,7 +79,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		opfile.FileAnalise();
 		analisis.GetFilePoint(&opfile);
 		analisis.DrawBackGround(hdc);
-		analisis.CreateWindowButton(hwnd, ((LPCREATESTRUCT) lParam)->hInstance);
+		hInstance = ((LPCREATESTRUCT) lParam)->hInstance;
 
 		ReleaseDC(hwnd, *hdc);
 		delete(hdc);
@@ -86,6 +87,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_SIZE:
 		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
+		analisis.CreateWindowButton(hwnd, hInstance);
+
 		return 0;
 		
 	case WM_PAINT:

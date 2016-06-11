@@ -18,13 +18,13 @@ Analisis::~Analisis(void)
 void Analisis::CreateWindowButton(HWND hwnd, HINSTANCE hInstance)
 {
 	PaintFun paintfun;
-	paintfun.CreateButton(10, 10, 80, 40, hwnd, hInstance, ID_BUTTON1);
+	paintfun.CreateButton(tableAreaRect.right + 10, tableAreaRect.top, 80, 40, hwnd, hInstance, ID_BUTTON1);
 }
 
 void Analisis::DrawButton(LPDRAWITEMSTRUCT pdis)
 {
 	PaintFun paintfun;
-	paintfun.DrawButton(pdis, TEXT("hehe"), 4);
+	paintfun.DrawButton(pdis, TEXT("∞¥«Ú∫≈≈≈–Ú"), 5);
 }
 
 void Analisis::GetFilePoint(OpFile *opfile)
@@ -142,10 +142,10 @@ void Analisis::SetWorkSpaceArea(int x, int y)
 	windowAreaRect.right = x;
 	windowAreaRect.bottom = y;
 
-	tableAreaRect.top = windowAreaRect.bottom / 5;
-	tableAreaRect.bottom = tableAreaRect.top + 33 * 20;  //every number has 20 pixel
+	tableAreaRect.top = windowAreaRect.top + 40;
+	tableAreaRect.bottom = tableAreaRect.top + 49 * 17;  //every number has 20 pixel
 	tableAreaRect.left = windowAreaRect.left + 50;
-	tableAreaRect.right = windowAreaRect.right - 50;
+	tableAreaRect.right = windowAreaRect.right - 200;
 }
 
 void Analisis::ChangeShowArea(short MouseWhell)
