@@ -25,9 +25,9 @@ public:
 	PaintFun(void);
 	~PaintFun(void);
 
-	void DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, COLORREF pen);
-	void DrawFrame(HDC *hdc, RECT rect);
-	void DrawCoordinate(HDC *hdcBuffer, 
+	void DrawRect(HDC hdcBuffer, COLORREF color, RECT rect, COLORREF pen);
+	void DrawFrame(HDC hdc, RECT rect);
+	void DrawCoordinate(HDC hdcBuffer, 
 	int xlocation, 
 	int ylocation, 
 	int start, 

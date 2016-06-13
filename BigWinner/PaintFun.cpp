@@ -11,23 +11,25 @@ PaintFun::~PaintFun(void)
 }
 
 
-void PaintFun::DrawRect(HDC *hdcBuffer, COLORREF color, RECT rect, COLORREF pen)
+void PaintFun::DrawRect(HDC hdcBuffer, COLORREF color, RECT rect, COLORREF pen)
 {
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HPEN hPen = CreatePen(PS_SOLID, 1, pen);
-	SelectObject(*hdcBuffer, hPen);
-	SelectObject(*hdcBuffer, hBrush);
-	Rectangle(*hdcBuffer, 
+	HPEN hPrePen = (HPEN)SelectObject(hdcBuffer, hPen);
+	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdcBuffer, hBrush);
+	Rectangle(hdcBuffer, 
 		rect.left, 
 		rect.top, 
 		rect.right, 
 		rect.bottom
 		);
+	SelectObject(hdcBuffer, hPrePen);
 	DeleteObject(hPen);
+	SelectObject(hdcBuffer, hPreBrush);
 	DeleteObject(hBrush);
 }
 
-void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
+void PaintFun::DrawFrame(HDC hdcBuffer, RECT rect)
 {
 	rect.left += 3;
 	rect.top += 3;
@@ -49,7 +51,7 @@ void PaintFun::DrawFrame(HDC *hdcBuffer, RECT rect)
 //Draw Horizon coordinnate
 //float start means how many percentage of the first point location in the first interval, value number is between 0 to len
 void PaintFun::DrawCoordinate(
-	HDC *hdcBuffer, 
+	HDC hdcBuffer, 
 	int xlocation, 
 	int ylocation, 
 	int start, 
@@ -60,10 +62,10 @@ void PaintFun::DrawCoordinate(
 	vector<string>::iterator TextString)
 {
 	HFONT hPreFont, hDataFont;
-	hDataFont = CreateMyFont(*hdcBuffer, (LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
-	hPreFont = (HFONT)SelectObject(*hdcBuffer, hDataFont);
-	SelectObject(*hdcBuffer, GetStockObject(BLACK_PEN));
-	SetBkColor(*hdcBuffer, BRUSH_WHITE);
+	hDataFont = CreateMyFont(hdcBuffer, (LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
+	hPreFont = (HFONT)SelectObject(hdcBuffer, hDataFont);
+	HPEN hPrePen = (HPEN)SelectObject(hdcBuffer, GetStockObject(BLACK_PEN));
+	SetBkColor(hdcBuffer, BRUSH_WHITE);
 
 	wchar_t *lpcText;
 	unsigned char TextLen = TextString->length();
@@ -129,7 +131,7 @@ void PaintFun::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(*hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextLen);
+			TextOut(hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextLen);
 			free(lpcText);
 		}
 
@@ -179,11 +181,12 @@ void PaintFun::DrawCoordinate(
 		apt[valueable_point_cnt * 3 + 1].y = ylocation - len;
 	}
 
-	Polyline(*hdcBuffer, apt, valueable_point_cnt * 3 + 2);
+	Polyline(hdcBuffer, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
 	free(total_apt);
-	SelectObject(*hdcBuffer, hPreFont);
+	SelectObject(hdcBuffer, hPreFont);
 	DeleteObject(hDataFont);
+	SelectObject(hdcBuffer, hPrePen);
 	DeleteObject(GetStockObject(BLACK_PEN));
 }
 
@@ -220,7 +223,7 @@ void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
 	GetTextMetrics(pdis->hDC, &tm);
 	int xText = ((pdis->rcItem.right - pdis->rcItem.left) / 2) - (13 * textnum) / 2;
 	int yText = (pdis->rcItem.bottom - pdis->rcItem.top) / 2 - 13 / 2;
-	DrawRect(&pdis->hDC, BRUSH_LIGHT_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
+	DrawRect(pdis->hDC, BRUSH_LIGHT_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
 	SetBkColor(pdis->hDC, BRUSH_LIGHT_GRAY);
 	
 	HFONT hFont, hPreFont;
@@ -230,7 +233,7 @@ void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
 
 	if (pdis->itemState & ODS_SELECTED)
 	{
-		DrawRect(&pdis->hDC, BRUSH_DEEP_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
+		DrawRect(pdis->hDC, BRUSH_DEEP_GRAY, pdis->rcItem, BRUSH_DEEP_GRAY);
 		SetBkColor(pdis->hDC, BRUSH_DEEP_GRAY);
 		TextOut(pdis->hDC, xText, yText, text, textnum);
 	}

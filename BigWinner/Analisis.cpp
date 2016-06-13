@@ -32,30 +32,28 @@ void Analisis::GetFilePoint(OpFile *opfile)
 	p_opfile = opfile;
 }
 
-void Analisis::ShowTable(HDC *hdc)
+void Analisis::ShowTable(HDC hdc)
 {
-	HDC *hdcBuffer = new HDC;
+	HDC hdcBuffer;
 	HBITMAP *bitmapBuff = new HBITMAP;
-	HBITMAP prebitmap;
+	HBITMAP PreBitmap;
 	PaintFun paintfun;
 
-	*bitmapBuff =  CreateCompatibleBitmap(*hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-	*hdcBuffer = CreateCompatibleDC(*hdc);
-	prebitmap = (HBITMAP)SelectObject(*hdcBuffer, *bitmapBuff);
+	*bitmapBuff =  CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	hdcBuffer = CreateCompatibleDC(hdc);
+	PreBitmap = (HBITMAP)SelectObject(hdcBuffer, *bitmapBuff);
 
 	DrawBackGround(hdcBuffer);
 	DrawCoordinate(hdcBuffer);
 
-	BitBlt(*hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, *hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
+	BitBlt(hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
 
-	SelectObject(*hdcBuffer, prebitmap);
+	SelectObject(hdcBuffer, PreBitmap);
 	DeleteObject(*bitmapBuff);
-	DeleteDC(*hdcBuffer);
-	delete(bitmapBuff);
-	delete(hdcBuffer);
+	DeleteDC(hdcBuffer);
 }
 
-void Analisis::DrawCoordinate(HDC *hdcBuffer)
+void Analisis::DrawCoordinate(HDC hdcBuffer)
 {
 	PaintFun paintfun;
 	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 50;
@@ -127,7 +125,7 @@ void Analisis::DrawCoordinate(HDC *hdcBuffer)
 		);
 }
 
-void Analisis::DrawBackGround(HDC *hdcBuffer)
+void Analisis::DrawBackGround(HDC hdcBuffer)
 {
 	PaintFun paintfun;
 

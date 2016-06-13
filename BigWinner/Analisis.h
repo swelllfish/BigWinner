@@ -20,12 +20,12 @@ public:
 	void CreateWindowButton(HWND hwnd, HINSTANCE hInstance);
 	void DrawButton(LPDRAWITEMSTRUCT pdis);
 	void GetFilePoint(OpFile *opfile);
-	void ShowTable(HDC *hdc);
-	void DrawBackGround(HDC *hdc);
+	void ShowTable(HDC hdc);
+	void DrawBackGround(HDC hdc);
 	void SetWorkSpaceArea(int x, int y);
 	void ChangeShowArea(short MouseWhell);
 	void MouseAction(HWND hwnd, short x, short y, unsigned short act_type);
-	void DrawCoordinate(HDC *hdc);
+	void DrawCoordinate(HDC hdc);
 	void InvalidateArea(HWND hwnd);
 	void Exit();
 
