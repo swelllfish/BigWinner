@@ -217,6 +217,11 @@ HWND PaintFun::CreateButton(int x, int y, int width, int length, HWND parent_hwn
 	return CreateWindow(TEXT("button"), TEXT(""), WS_CHILD | WS_VISIBLE | BS_OWNERDRAW, x, y, width, length, parent_hwnd, (HMENU)ID, hInstance, NULL);
 }
 
+void PaintFun::MoveButton(HWND hwnd, int x, int y, int width, int length, BOOL Repaint)
+{
+	MoveWindow(hwnd, x, y, width, length, Repaint);
+}
+
 void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
 {
 	TEXTMETRIC tm;

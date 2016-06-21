@@ -10,6 +10,10 @@
 #define	INTER_LEN_CHANGE	(1)
 
 #define ID_BUTTON1			(1)
+typedef struct _ANALYSIS_BUTTON
+{
+	HWND Button1;
+}ANALYSIS_BUTTON;
 
 class Analisis
 {
@@ -18,6 +22,7 @@ public:
 	~Analisis(void);
 
 	void CreateWindowButton(HWND hwnd, HINSTANCE hInstance);
+	void MoveWindowButton();
 	void DrawButton(LPDRAWITEMSTRUCT pdis);
 	void GetFilePoint(OpFile *opfile);
 	void ShowTable(HDC hdc);
@@ -46,5 +51,6 @@ private:
 	POINT whellMouseLocation;
 	int   mouseMove_x;	//Table move follow the cursor
 	int   tableStartPoint_x;	//First Point Location
+	ANALYSIS_BUTTON Analysis_Button;
 };
 

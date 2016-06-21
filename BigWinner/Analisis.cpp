@@ -18,7 +18,15 @@ Analisis::~Analisis(void)
 void Analisis::CreateWindowButton(HWND hwnd, HINSTANCE hInstance)
 {
 	PaintFun paintfun;
-	paintfun.CreateButton(tableAreaRect.right + 10, tableAreaRect.top, 80, 40, hwnd, hInstance, ID_BUTTON1);
+	//paintfun.CreateButton(tableAreaRect.right + 10, tableAreaRect.top, 80, 40, hwnd, hInstance, ID_BUTTON1);
+	Analysis_Button.Button1 = paintfun.CreateButton(0, 0, 80, 40, hwnd, hInstance, ID_BUTTON1);
+}
+
+void Analisis::MoveWindowButton()
+{
+	PaintFun paintfun;
+
+	paintfun.MoveButton(Analysis_Button.Button1, tableAreaRect.right + 10, tableAreaRect.top, 80, 40, TRUE);
 }
 
 void Analisis::DrawButton(LPDRAWITEMSTRUCT pdis)

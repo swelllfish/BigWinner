@@ -79,14 +79,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		analisis.GetFilePoint(&opfile);
 		analisis.DrawBackGround(hdc);
 		hInstance = ((LPCREATESTRUCT) lParam)->hInstance;
+		analisis.CreateWindowButton(hwnd, hInstance);
 
 		ReleaseDC(hwnd, hdc);
 		return 0;
 
 	case WM_SIZE:
 		analisis.SetWorkSpaceArea(LOWORD(lParam), HIWORD(lParam));
-		analisis.CreateWindowButton(hwnd, hInstance);
-
+		analisis.MoveWindowButton();
 		return 0;
 		
 	case WM_PAINT:
