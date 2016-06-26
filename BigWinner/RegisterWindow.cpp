@@ -113,6 +113,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		analisis.InvalidateArea(hwnd);
 		return 0;
 
+	case WM_COMMAND:
+		switch (wParam)
+		{
+		case ID_BUTTON1:
+			break;
+		}
+		return 0;
+
 	case WM_DESTROY:
 		opfile.Exit();
 		analisis.Exit();
