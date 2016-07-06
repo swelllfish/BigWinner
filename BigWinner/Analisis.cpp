@@ -64,9 +64,9 @@ void Analisis::ShowTable(HDC hdc)
 void Analisis::DrawCoordinate(HDC hdcBuffer)
 {
 	PaintFun paintfun;
-	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 50;
+	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 120;
 	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 20;
-	POINT Start_Point = {tableAreaRect.left + 10, tableAreaRect.bottom - 20};
+	POINT Start_Point = {tableAreaRect.left + 80, tableAreaRect.bottom - 20};
 	static bool First_In = TRUE;
 	int Total_Len = p_opfile->GetInfor_Capacity(DATA_NUM) * nowInterLen;
 	int End_Point = - (Total_Len - xCoor_Len);

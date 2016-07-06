@@ -68,7 +68,6 @@ void PaintFun::DrawCoordinate(
 	SetBkColor(hdcBuffer, BRUSH_WHITE);
 
 	wchar_t *lpcText;
-	unsigned char TextLen = TextString->length();
 	int valueable_point_cnt = 0;
 	unsigned int start_point = 0xFFFF, end_point;
 
@@ -131,7 +130,7 @@ void PaintFun::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextLen);
+			TextOut(hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
 			free(lpcText);
 		}
 
@@ -175,6 +174,15 @@ void PaintFun::DrawCoordinate(
 			apt[i * 3 - 1].y = apt[i * 3 - 2].y;
 
 			apt[i * 3] = apt[i * 3 - 2];
+
+			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
+			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
+			TextOut(hdcBuffer, 
+				apt[i * 3].x - (TextString[start_point + i - 1].length() * 10 + 4), 
+				apt[i * 3].y - (15/2), 
+				lpcText, 
+				TextString[start_point + i - 1].length());
+			free(lpcText);
 		}
 
 		apt[valueable_point_cnt * 3 + 1].x = xlocation;
