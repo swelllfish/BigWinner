@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="Analisis.cpp" />
     <ClCompile Include="BasicFun.cpp" />
+    <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="OpFile.cpp" />
     <ClCompile Include="PaintFun.cpp" />
     <ClCompile Include="RegisterWindow.cpp" />
@@ -84,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="Analisis.h" />
     <ClInclude Include="BasicFun.h" />
+    <ClInclude Include="Coordinate.h" />
     <ClInclude Include="OpFile.h" />
     <ClInclude Include="PaintFun.h" />
     <ClInclude Include="stdafx.h" />

@@ -27,15 +27,6 @@ public:
 
 	void DrawRect(HDC hdcBuffer, COLORREF color, RECT rect, COLORREF pen);
 	void DrawFrame(HDC hdc, RECT rect);
-	void DrawCoordinate(HDC hdcBuffer, 
-	int xlocation, 
-	int ylocation, 
-	int start, 
-	int len,
-	int inter_len,
-	int total_cnt, 
-	unsigned char coortype,
-	vector<string>::iterator TextString);
 	HFONT CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle);
 	HWND CreateButton(int x, int y, int width, int length, HWND parent_hwnd, HINSTANCE hInstance, int ID);
 	void MoveButton(HWND hwnd, int x, int y, int width, int length, BOOL Repaint);

@@ -64,6 +64,7 @@ void Analisis::ShowTable(HDC hdc)
 void Analisis::DrawCoordinate(HDC hdcBuffer)
 {
 	PaintFun paintfun;
+	Coordinate coor;
 	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 120;
 	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 20;
 	POINT Start_Point = {tableAreaRect.left + 80, tableAreaRect.bottom - 20};
@@ -110,7 +111,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 	}
 
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
-	paintfun.DrawCoordinate(hdcBuffer, 
+	coor.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
 		tableStartPoint_x, 
@@ -121,7 +122,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_string
 		);
 
-	paintfun.DrawCoordinate(hdcBuffer, 
+	coor.DrawCoordinate(hdcBuffer, 
 		Start_Point.x,
 		Start_Point.y,
 		0, 

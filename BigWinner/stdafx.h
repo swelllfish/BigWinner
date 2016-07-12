@@ -17,4 +17,5 @@
 #include "PaintFun.h"
 
 #include "OpFile.h"
+#include "Coordinate.h"
 #include "Analisis.h"

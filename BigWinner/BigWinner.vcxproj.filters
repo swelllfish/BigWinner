@@ -19,6 +19,9 @@
     <ClCompile Include="RegisterWindow.cpp">
       <Filter>SourceFile</Filter>
     </ClCompile>
+    <ClCompile Include="Coordinate.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Analisis.h">
@@ -34,6 +37,9 @@
       <Filter>HeadFile</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinate.h">
       <Filter>HeadFile</Filter>
     </ClInclude>
   </ItemGroup>
