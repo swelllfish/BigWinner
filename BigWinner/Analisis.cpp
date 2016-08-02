@@ -132,6 +132,8 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		VERTICAL_COOR,
 		it_string
 		);
+
+	coor.DrawPoint(hdcBuffer, 1928, 32);
 }
 
 void Analisis::DrawBackGround(HDC hdcBuffer)

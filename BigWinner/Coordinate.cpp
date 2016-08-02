@@ -3,24 +3,33 @@
 
 Coordinate::Coordinate(void)
 {
+	tCoor_Param.x = NULL;
+	tCoor_Param.y = NULL;
 }
 
 
 Coordinate::~Coordinate(void)
 {
+	if (tCoor_Param.x != NULL)
+	{
+		free(tCoor_Param.x);
+	}
+	if (tCoor_Param.y != NULL)
+	{
+		free(tCoor_Param.y);
+	}
 }
 
 //Draw Horizon coordinnate
-//int start means how many percentage of the first point location in the first interval, value number is between 0 to len
 void Coordinate::DrawCoordinate(
 	HDC hdcBuffer, 
-	int xlocation, 
-	int ylocation, 
-	int start, 
-	int len,
-	int inter_len,
-	int total_cnt, 
-	unsigned char coortype,
+	int xLocation, 
+	int yLocation, 
+	int StartLocation, 
+	int CoorLen,
+	int InterLen,
+	int PointCnt, 
+	unsigned char CoorType,
 	vector<string>::iterator TextString)
 {
 	HFONT hPreFont, hDataFont;
@@ -34,37 +43,42 @@ void Coordinate::DrawCoordinate(
 	int valueable_point_cnt = 0;
 	unsigned int start_point = 0xFFFF, end_point;
 
-	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (total_cnt + 1));		//add point 0
+	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (PointCnt + 1));		//add point 0
 	POINT *apt;
 
-	if ((total_cnt * inter_len - len) < 0)
+	if ((PointCnt * InterLen - CoorLen) < 0)
 	{
-		len = total_cnt * inter_len;
+		CoorLen = PointCnt * InterLen;
 	}
 
-	if (start > 0)
+	if (StartLocation > 0)
 	{
-		start = 0;
+		StartLocation = 0;
 	}
-	if (start <  - (total_cnt * inter_len - len))
+	if (StartLocation <  - (PointCnt * InterLen - CoorLen))
 	{
-		start =  - (total_cnt * inter_len - len);
+		StartLocation =  - (PointCnt * InterLen - CoorLen);
 	}
 
-	if (coortype == HORZION_COOR)
+	if (CoorType == HORZION_COOR)
 	{
 		//calculate point location
-		total_apt[0] = start;
-		if (total_apt[0] == 0)
+		total_apt[0] = StartLocation;
+
+		if (tCoor_Param.x != NULL)
 		{
-			start_point = 0;
-			valueable_point_cnt++;
+			free(tCoor_Param.x);
 		}
 
-		for (int i = 1; i < total_cnt + 1; ++i)
+		tCoor_Param.x = (LONG *)malloc(sizeof(LONG) * PointCnt);
+		tCoor_Param.xLen = CoorLen;
+
+		for (int i = 0; i < PointCnt; ++i)
 		{
-			total_apt[i] = (int)(i * inter_len) + total_apt[0];
-			if (total_apt[i] >= 0 && total_apt[i] < len)
+			total_apt[i] = (int)(i * InterLen) + total_apt[0];
+			tCoor_Param.x[i] = total_apt[i] + xLocation;
+
+			if (total_apt[i] >= 0 && total_apt[i] < CoorLen)
 			{
 				valueable_point_cnt++;
 				if (start_point == 0xFFFF)
@@ -77,13 +91,13 @@ void Coordinate::DrawCoordinate(
 
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 
-		apt[0].x = xlocation;
-		apt[0].y = ylocation;
+		apt[0].x = xLocation;
+		apt[0].y = yLocation;
 
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
-			apt[i * 3 - 2].x = total_apt[start_point + i - 1] + xlocation;
+			apt[i * 3 - 2].x = total_apt[start_point + i - 1] + xLocation;
 			apt[i * 3 - 2].y = apt[0].y;
 
 			apt[i * 3 - 1].x = apt[i * 3 - 2].x;
@@ -97,22 +111,26 @@ void Coordinate::DrawCoordinate(
 			free(lpcText);
 		}
 
-		apt[valueable_point_cnt * 3 + 1].x = xlocation + len;
-		apt[valueable_point_cnt * 3 + 1].y = ylocation;
+		apt[valueable_point_cnt * 3 + 1].x = xLocation + CoorLen;
+		apt[valueable_point_cnt * 3 + 1].y = yLocation;
 	}
-	else if (coortype == VERTICAL_COOR)
+	else if (CoorType == VERTICAL_COOR)
 	{
-		total_apt[0] = - start;
-		if (total_apt[0] == ylocation)
+		if (tCoor_Param.y != NULL)
 		{
-			start_point = 0;
+			free(tCoor_Param.y);
 		}
+		tCoor_Param.y = (LONG *)malloc(sizeof(LONG) * PointCnt);
+		tCoor_Param.yLen = CoorLen;
+
+		total_apt[0] = - StartLocation;
 
 		int i;
-		for (i = 1; i < total_cnt + 1; ++i)
+		for (i = 0; i < PointCnt; ++i)
 		{
-			total_apt[i] = total_apt[0] - (int)(i * inter_len);
-			if (total_apt[i] <= 0 && total_apt[i] >= - len)
+			total_apt[i] = total_apt[0] - (int)(i * InterLen);
+			tCoor_Param.y[i] = total_apt[i] + yLocation;
+			if (total_apt[i] <= 0 && total_apt[i] >= - CoorLen)
 			{
 				valueable_point_cnt++;
 				if (start_point == 0xFFFF)
@@ -125,13 +143,13 @@ void Coordinate::DrawCoordinate(
 
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 
-		apt[0].x = xlocation;
-		apt[0].y = ylocation;
+		apt[0].x = xLocation;
+		apt[0].y = yLocation;
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
 			apt[i * 3 - 2].x = apt[0].x;
-			apt[i * 3 - 2].y = total_apt[start_point + i - 1] + ylocation;
+			apt[i * 3 - 2].y = total_apt[start_point + i - 1] + yLocation;
 
 			apt[i * 3 - 1].x = apt[0].x + 5;
 			apt[i * 3 - 1].y = apt[i * 3 - 2].y;
@@ -148,8 +166,8 @@ void Coordinate::DrawCoordinate(
 			free(lpcText);
 		}
 
-		apt[valueable_point_cnt * 3 + 1].x = xlocation;
-		apt[valueable_point_cnt * 3 + 1].y = ylocation - len;
+		apt[valueable_point_cnt * 3 + 1].x = xLocation;
+		apt[valueable_point_cnt * 3 + 1].y = yLocation - CoorLen;
 	}
 
 	Polyline(hdcBuffer, apt, valueable_point_cnt * 3 + 2);
@@ -160,3 +178,32 @@ void Coordinate::DrawCoordinate(
 	SelectObject(hdcBuffer, hPrePen);
 	DeleteObject(GetStockObject(BLACK_PEN));
 }
+
+
+void Coordinate::DrawPoint(
+	HDC hdcBuffer,
+	int xPointNum,
+	int yPointNum)
+{
+	if (tCoor_Param.x == NULL || tCoor_Param.y == NULL)
+	{
+		return;
+	}
+
+	int Left = tCoor_Param.x[xPointNum] - 5;
+	int Top = tCoor_Param.y[yPointNum] - 5;
+	int Right = tCoor_Param.x[xPointNum] + 5;
+	int Buttom = tCoor_Param.y[yPointNum] + 5;
+
+	HPEN hPrePen = (HPEN)SelectObject(hdcBuffer, GetStockObject(NULL_PEN));
+	HBRUSH hBrush = CreateSolidBrush(BRUSH_DEEP_GRAY);
+	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdcBuffer, hBrush);
+
+	Ellipse(hdcBuffer, Left, Top, Right, Buttom);
+
+	SelectObject(hdcBuffer, hPreBrush);
+	DeleteObject(hBrush);
+	SelectObject(hdcBuffer, hPrePen);
+	DeleteObject(GetStockObject(NULL_PEN));
+}
+
