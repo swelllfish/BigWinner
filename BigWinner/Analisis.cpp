@@ -64,9 +64,8 @@ void Analisis::ShowTable(HDC hdc)
 void Analisis::DrawCoordinate(HDC hdcBuffer)
 {
 	PaintFun paintfun;
-	Coordinate coor;
 	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 120;
-	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 20;
+	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 40;
 	POINT Start_Point = {tableAreaRect.left + 80, tableAreaRect.bottom - 20};
 	static bool First_In = TRUE;
 	int Total_Len = p_opfile->GetInfor_Capacity(DATA_NUM) * nowInterLen;
@@ -110,12 +109,11 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		tableStartPoint_x = End_Point;
 	}
 
+	Coordinate coor(Start_Point.x, Start_Point.y, xCoor_Len, yCoor_Len, hdcBuffer);
+
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
 	coor.DrawCoordinate(hdcBuffer, 
-		Start_Point.x,
-		Start_Point.y,
 		tableStartPoint_x, 
-		xCoor_Len, 
 		nowInterLen,
 		p_opfile->GetInfor_Capacity(DATA_NUM),
 		HORZION_COOR,
@@ -123,17 +121,14 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		);
 
 	coor.DrawCoordinate(hdcBuffer, 
-		Start_Point.x,
-		Start_Point.y,
 		0, 
-		tableAreaRect.bottom - tableAreaRect.top - 40, 
 		(tableAreaRect.bottom - tableAreaRect.top - 40) / 33, 
 		33,
 		VERTICAL_COOR,
 		it_string
 		);
 
-	coor.DrawPoint(hdcBuffer, 1928, 32);
+	coor.DrawPoint(hdcBuffer, 1900, 32);
 }
 
 void Analisis::DrawBackGround(HDC hdcBuffer)
