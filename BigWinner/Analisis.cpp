@@ -43,13 +43,13 @@ void Analisis::GetFilePoint(OpFile *opfile)
 void Analisis::ShowTable(HDC hdc)
 {
 	HDC hdcBuffer;
-	HBITMAP *bitmapBuff = new HBITMAP;
+	HBITMAP bitmapBuff;
 	HBITMAP PreBitmap;
 	PaintFun paintfun;
 
-	*bitmapBuff =  CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	bitmapBuff =  CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	hdcBuffer = CreateCompatibleDC(hdc);
-	PreBitmap = (HBITMAP)SelectObject(hdcBuffer, *bitmapBuff);
+	PreBitmap = (HBITMAP)SelectObject(hdcBuffer, bitmapBuff);
 
 	DrawBackGround(hdcBuffer);
 	DrawCoordinate(hdcBuffer);
@@ -57,7 +57,7 @@ void Analisis::ShowTable(HDC hdc)
 	BitBlt(hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
 
 	SelectObject(hdcBuffer, PreBitmap);
-	DeleteObject(*bitmapBuff);
+	DeleteObject(bitmapBuff);
 	DeleteDC(hdcBuffer);
 }
 
@@ -111,8 +111,10 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 
 	Coordinate coor(Start_Point.x, Start_Point.y, xCoor_Len, yCoor_Len, hdcBuffer);
 
+	coor.StartPaint();
+
 	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
-	coor.DrawCoordinate(hdcBuffer, 
+	coor.DrawCoordinate(
 		tableStartPoint_x, 
 		nowInterLen,
 		p_opfile->GetInfor_Capacity(DATA_NUM),
@@ -120,7 +122,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_string
 		);
 
-	coor.DrawCoordinate(hdcBuffer, 
+	coor.DrawCoordinate(
 		0, 
 		(tableAreaRect.bottom - tableAreaRect.top - 40) / 33, 
 		33,
@@ -128,7 +130,9 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_string
 		);
 
-	coor.DrawPoint(hdcBuffer, 1900, 32);
+	coor.DrawPoint(1900, 32);
+
+	coor.EndPaint();
 }
 
 void Analisis::DrawBackGround(HDC hdcBuffer)

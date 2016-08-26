@@ -2,7 +2,7 @@
 /**Bigwinner register window main function**/
 
 #define ID_TIMER 1
-#define TIMER_CLK 13
+#define TIMER_CLK 16
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 WNDCLASS SetWndClass(HINSTANCE, TCHAR []);

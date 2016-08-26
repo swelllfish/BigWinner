@@ -7,6 +7,10 @@ typedef struct
 	LONG *yPoint;
 	int xLen;
 	int yLen;
+	int xCanvasSize;
+	int yCanvasSize;
+	int xCanvasPoint;
+	int yCanvasPoint;
 	int x;
 	int y;
 }tCOOR_PARAM;
@@ -17,10 +21,11 @@ public:
 	Coordinate(int x, int y, int xLen, int yLen, HDC hdc);
 	~Coordinate(void);
 
-	tCOOR_PARAM tCoor_Param;
+	void StartPaint();
+
+	void EndPaint();
 
 	void DrawCoordinate(
-		HDC hdcBuffer, 
 		int StartLocation, 
 		int InterLen,
 		int PointCnt, 
@@ -28,8 +33,14 @@ public:
 		vector<string>::iterator TextString);
 
 	void DrawPoint(
-		HDC hdcBuffer,
 		int xPointNum,
 		int yPointNum);
+
+private:
+	tCOOR_PARAM tCoor_Param;
+
+	HDC hdcCoorBuffer;
+	HBITMAP CoorBitMap;
+	HBITMAP PreCoorBitMap;
 };
 

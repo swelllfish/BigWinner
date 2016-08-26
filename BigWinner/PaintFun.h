@@ -28,7 +28,7 @@ public:
 
 	void DrawRect(HDC hdcBuffer, COLORREF color, RECT rect, COLORREF pen);
 	void DrawFrame(HDC hdc, RECT rect);
-	HFONT CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle);
+	HFONT CreateMyFont(LPCTSTR face, int width, int height, int angle);
 	HWND CreateButton(int x, int y, int width, int length, HWND parent_hwnd, HINSTANCE hInstance, int ID);
 	void MoveButton(HWND hwnd, int x, int y, int width, int length, BOOL Repaint);
 	void DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum);

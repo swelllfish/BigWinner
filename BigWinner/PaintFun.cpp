@@ -49,7 +49,7 @@ void PaintFun::DrawFrame(HDC hdcBuffer, RECT rect)
 }
 
 
-HFONT PaintFun::CreateMyFont(HDC hdc, LPCTSTR face, int width, int height, int angle)
+HFONT PaintFun::CreateMyFont(LPCTSTR face, int width, int height, int angle)
 {
 	HFONT hFont;
 	hFont = CreateFont(
@@ -91,7 +91,7 @@ void PaintFun::DrawButton(LPDRAWITEMSTRUCT pdis, TCHAR *text, int textnum)
 	SetBkColor(pdis->hDC, BRUSH_LIGHT_GRAY);
 	
 	HFONT hFont, hPreFont;
-	hFont = CreateMyFont(pdis->hDC, (LPCTSTR)("Î¢ÈíÑÅºÚ"), 7, 13, 0);
+	hFont = CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 7, 13, 0);
 	hPreFont = (HFONT)SelectObject(pdis->hDC, hFont);
 	TextOut(pdis->hDC, xText, yText, text, textnum);
 
