@@ -18,7 +18,7 @@ Analisis::~Analisis(void)
 void Analisis::CreateWindowButton(HWND hwnd, HINSTANCE hInstance)
 {
 	PaintFun paintfun;
-	//paintfun.CreateButton(tableAreaRect.right + 10, tableAreaRect.top, 80, 40, hwnd, hInstance, ID_BUTTON1);
+
 	Analysis_Button.Button1 = paintfun.CreateButton(0, 0, 80, 40, hwnd, hInstance, ID_BUTTON1);
 }
 
@@ -47,12 +47,27 @@ void Analisis::ShowTable(HDC hdc)
 	HBITMAP PreBitmap;
 	PaintFun paintfun;
 
+	LARGE_INTEGER begin_time, end_time, freq_;
+
 	bitmapBuff =  CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	hdcBuffer = CreateCompatibleDC(hdc);
 	PreBitmap = (HBITMAP)SelectObject(hdcBuffer, bitmapBuff);
-
 	DrawBackGround(hdcBuffer);
+
+// 	QueryPerformanceFrequency(&freq_);
+// 	QueryPerformanceCounter(&begin_time);
+
 	DrawCoordinate(hdcBuffer);
+
+// 	QueryPerformanceCounter(&end_time);
+// 	double ns_time = (end_time.QuadPart - begin_time.QuadPart) * 1000000.0 / freq_.QuadPart;
+// 	char buffer[20];
+// 	sprintf_s(buffer, "%f", ns_time);
+// 	string time = buffer;
+// 	wchar_t *lpcText;
+// 	lpcText = (wchar_t *) malloc(sizeof(wchar_t) *time.length());
+// 	StringToLPCWSTR(time, lpcText);
+// 	TextOut(hdc, tableAreaRect.left, tableAreaRect.top, lpcText, 12);
 
 	BitBlt(hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
 
@@ -130,7 +145,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_string
 		);
 
-	coor.DrawPoint(1900, 32);
+	coor.DrawPoint(1900, 33);
 
 	coor.EndPaint();
 }
