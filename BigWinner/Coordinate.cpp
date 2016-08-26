@@ -6,17 +6,17 @@ Coordinate::Coordinate(int x, int y, int xLen, int yLen, HDC hdc)
 	tCoor_Param.xPoint = NULL;
 	tCoor_Param.yPoint = NULL;
 
-	tCoor_Param.x = x;
-	tCoor_Param.y = y;
+	tCoor_Param.x = 80;
+	tCoor_Param.y = yLen + 10;
 
 	tCoor_Param.xLen = xLen;
 	tCoor_Param.yLen = yLen;
 
-	tCoor_Param.xCanvasSize = xLen + 20;
-	tCoor_Param.yCanvasSize = yLen + 80;
+	tCoor_Param.xCanvasSize = xLen + 90;
+	tCoor_Param.yCanvasSize = yLen + 40;
 
-	tCoor_Param.xCanvasPoint = x - 10;
-	tCoor_Param.yCanvasPoint = tCoor_Param.y - tCoor_Param.yLen - 70;
+	tCoor_Param.xCanvasPoint = x - 80;
+	tCoor_Param.yCanvasPoint = y - yLen - 10;
 
 	tCoor_Param.hdc = hdc;
 }
@@ -102,7 +102,6 @@ void Coordinate::DrawCoordinate(
 		}
 
 		tCoor_Param.xPoint = (LONG *)malloc(sizeof(LONG) * PointCnt);
-		tCoor_Param.xLen = tCoor_Param.xLen;
 
 		for (int i = 0; i < PointCnt; ++i)
 		{
@@ -166,7 +165,6 @@ void Coordinate::DrawCoordinate(
 			free(tCoor_Param.yPoint);
 		}
 		tCoor_Param.yPoint = (LONG *)malloc(sizeof(LONG) * PointCnt);
-		tCoor_Param.yLen = tCoor_Param.yLen;
 
 		total_apt[0] = - StartLocation;
 
