@@ -38,21 +38,34 @@ Coordinate::~Coordinate(void)
 
 void Coordinate::StartPaint()
 {
-	CoorBitMap =  CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize);
-	hdcCoorBuffer = CreateCompatibleDC(tCoor_Param.hdc);
-	PreCoorBitMap = (HBITMAP)SelectObject(hdcCoorBuffer, CoorBitMap);
+	hdc_coor.bitmap =  CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize);
+	hdc_coor.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
+	hdc_coor.Prebitmap = (HBITMAP)SelectObject(hdc_coor.hdcBuffer, hdc_coor.bitmap);
 
-	PatBlt(hdcCoorBuffer, 0, 0, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, WHITENESS);
+	PatBlt(hdc_coor.hdcBuffer, 0, 0, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, WHITENESS);
+
+	hdc_point.bitmap = CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xLen, tCoor_Param.yLen);
+	hdc_point.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
+	hdc_point.Prebitmap = (HBITMAP)SelectObject(hdc_point.hdcBuffer, hdc_point.bitmap);
+
+	PatBlt(hdc_point.hdcBuffer, 0, 0, tCoor_Param.xLen, tCoor_Param.yLen, WHITENESS);
 }
 
 void Coordinate::EndPaint()
 {
-	BitBlt(tCoor_Param.hdc, tCoor_Param.xCanvasPoint, tCoor_Param.yCanvasPoint, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, 
-		hdcCoorBuffer, 0, 0, SRCAND);
+	BitBlt(hdc_coor.hdcBuffer, tCoor_Param.x, tCoor_Param.y - tCoor_Param.yLen, tCoor_Param.xLen, tCoor_Param.yLen, 
+		hdc_point.hdcBuffer, 0, 0, SRCAND);
 
-	SelectObject(hdcCoorBuffer, PreCoorBitMap);
-	DeleteObject(CoorBitMap);
-	DeleteDC(hdcCoorBuffer);
+	SelectObject(hdc_point.hdcBuffer, hdc_coor.Prebitmap);
+	DeleteObject(hdc_point.bitmap);
+	DeleteDC(hdc_point.hdcBuffer);
+
+	BitBlt(tCoor_Param.hdc, tCoor_Param.xCanvasPoint, tCoor_Param.yCanvasPoint, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, 
+		hdc_coor.hdcBuffer, 0, 0, SRCAND);
+
+	SelectObject(hdc_coor.hdcBuffer, hdc_coor.Prebitmap);
+	DeleteObject(hdc_coor.bitmap);
+	DeleteDC(hdc_coor.hdcBuffer);
 }
 
 //Draw Horizon coordinnate
@@ -66,9 +79,9 @@ void Coordinate::DrawCoordinate(
 	HFONT hPreFont, hDataFont;
 	PaintFun paint;
 	hDataFont = paint.CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
-	hPreFont = (HFONT)SelectObject(hdcCoorBuffer, hDataFont);
-	HPEN hPrePen = (HPEN)SelectObject(hdcCoorBuffer, GetStockObject(BLACK_PEN));
-	//SetBkColor(hdcCoorBuffer, BRUSH_WHITE);
+	hPreFont = (HFONT)SelectObject(hdc_coor.hdcBuffer, hDataFont);
+	HPEN hPrePen = (HPEN)SelectObject(hdc_coor.hdcBuffer, GetStockObject(BLACK_PEN));
+	//SetBkColor(hdc_coor.hdcBuffer, BRUSH_WHITE);
 
 	wchar_t *lpcText;
 	int valueable_point_cnt = 0;
@@ -137,7 +150,7 @@ void Coordinate::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(hdcCoorBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
+			TextOut(hdc_coor.hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
 			free(lpcText);
 		}
 
@@ -201,7 +214,7 @@ void Coordinate::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(hdcCoorBuffer, 
+			TextOut(hdc_coor.hdcBuffer, 
 				apt[i * 3].x - (TextString[start_point + i - 1].length() * 10 + 4), 
 				apt[i * 3].y - (15/2), 
 				lpcText, 
@@ -213,12 +226,12 @@ void Coordinate::DrawCoordinate(
 		apt[valueable_point_cnt * 3 + 1].y = tCoor_Param.y - tCoor_Param.yLen;
 	}
 
-	Polyline(hdcCoorBuffer, apt, valueable_point_cnt * 3 + 2);
+	Polyline(hdc_coor.hdcBuffer, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
 	free(total_apt);
-	SelectObject(hdcCoorBuffer, hPreFont);
+	SelectObject(hdc_coor.hdcBuffer, hPreFont);
 	DeleteObject(hDataFont);
-	SelectObject(hdcCoorBuffer, hPrePen);
+	SelectObject(hdc_coor.hdcBuffer, hPrePen);
 	DeleteObject(GetStockObject(BLACK_PEN));
 }
 
@@ -235,7 +248,7 @@ void Coordinate::DrawPoint(
 
 	PaintFun paintfun;
 
-	HPEN hPrePen = (HPEN)SelectObject(hdcCoorBuffer, GetStockObject(NULL_PEN));
+	HPEN hPrePen = (HPEN)SelectObject(hdc_point.hdcBuffer, GetStockObject(NULL_PEN));
 
 	int Left = tCoor_Param.xPoint[xPointNum] - 10;
 	int Top = tCoor_Param.yPoint[yPointNum] - 10;
@@ -243,13 +256,13 @@ void Coordinate::DrawPoint(
 	int Buttom = tCoor_Param.yPoint[yPointNum] + 10;
 
 	HBRUSH hBrushBlue = CreateSolidBrush(BRUSH_DEEP_BLUE);
-	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdcCoorBuffer, hBrushBlue);
+	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrushBlue);
 
-	Ellipse(hdcCoorBuffer, Left, Top, Right, Buttom);
+	Ellipse(hdc_point.hdcBuffer, Left, Top, Right, Buttom);
 
-	SelectObject(hdcCoorBuffer, hPreBrush);
+	SelectObject(hdc_point.hdcBuffer, hPreBrush);
 	DeleteObject(hBrushBlue);
-	SelectObject(hdcCoorBuffer, hPrePen);
+	SelectObject(hdc_point.hdcBuffer, hPrePen);
 	DeleteObject(GetStockObject(NULL_PEN));
 }
 

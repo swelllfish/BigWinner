@@ -7,13 +7,20 @@ typedef struct
 	LONG *yPoint;
 	int xLen;
 	int yLen;
+	int x;
+	int y;
 	int xCanvasSize;
 	int yCanvasSize;
 	int xCanvasPoint;
 	int yCanvasPoint;
-	int x;
-	int y;
 }tCOOR_PARAM;
+
+typedef struct  
+{
+	HDC hdcBuffer;
+	HBITMAP bitmap;
+	HBITMAP Prebitmap;
+}tHDC_PARAM;
 
 class Coordinate
 {
@@ -38,9 +45,8 @@ public:
 
 private:
 	tCOOR_PARAM tCoor_Param;
-
-	HDC hdcCoorBuffer;
-	HBITMAP CoorBitMap;
-	HBITMAP PreCoorBitMap;
+	
+	tHDC_PARAM hdc_coor;
+	tHDC_PARAM hdc_point;
 };
 
