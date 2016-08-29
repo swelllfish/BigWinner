@@ -9,10 +9,10 @@ typedef struct
 	int yLen;
 	int x;
 	int y;
-	int xCanvasSize;
-	int yCanvasSize;
-	int xCanvasPoint;
-	int yCanvasPoint;
+// 	int xCanvasSize;
+// 	int yCanvasSize;
+// 	int xCanvasPoint;
+// 	int yCanvasPoint;
 }tCOOR_PARAM;
 
 typedef struct  
@@ -46,7 +46,7 @@ public:
 private:
 	tCOOR_PARAM tCoor_Param;
 	
-	tHDC_PARAM hdc_coor;
+// 	tHDC_PARAM hdc_coor;
 	tHDC_PARAM hdc_point;
 };
 

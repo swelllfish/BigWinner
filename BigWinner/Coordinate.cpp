@@ -8,20 +8,20 @@ Coordinate::Coordinate(int x, int y, int xLen, int yLen, HDC hdc)
 	tCoor_Param.yPoint = NULL;
 
 	//坐标轴在坐标画布当中的起点
-	tCoor_Param.x = 80;         
-	tCoor_Param.y = yLen + 10;
+	tCoor_Param.x = x;         
+	tCoor_Param.y = y;
 
 	//坐标轴长度
 	tCoor_Param.xLen = xLen;    
 	tCoor_Param.yLen = yLen;
 
-	//坐标画布的长度
-	tCoor_Param.xCanvasSize = xLen + 90;  
-	tCoor_Param.yCanvasSize = yLen + 40;
-
-	//最后帖画布时应该使用的起点位置
-	tCoor_Param.xCanvasPoint = x - 80;
-	tCoor_Param.yCanvasPoint = y - yLen - 10;
+// 	//坐标画布的长度
+// 	tCoor_Param.xCanvasSize = xLen + 90;  
+// 	tCoor_Param.yCanvasSize = yLen + 40;
+// 
+// 	//最后帖画布时应该使用的起点位置
+// 	tCoor_Param.xCanvasPoint = x - 80;
+// 	tCoor_Param.yCanvasPoint = y - yLen - 10;
 
 	tCoor_Param.hdc = hdc;
 }
@@ -45,11 +45,11 @@ Coordinate::~Coordinate(void)
 void Coordinate::StartPaint()
 {
 	//申请坐标轴画布
-	hdc_coor.bitmap =  CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize);
-	hdc_coor.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
-	hdc_coor.Prebitmap = (HBITMAP)SelectObject(hdc_coor.hdcBuffer, hdc_coor.bitmap);
-
-	PatBlt(hdc_coor.hdcBuffer, 0, 0, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, WHITENESS);
+// 	hdc_coor.bitmap =  CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize);
+// 	hdc_coor.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
+// 	hdc_coor.Prebitmap = (HBITMAP)SelectObject(hdc_coor.hdcBuffer, hdc_coor.bitmap);
+// 
+// 	PatBlt(hdc_coor.hdcBuffer, 0, 0, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, WHITENESS);
 
 	//申请点的画布
 	hdc_point.bitmap = CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xLen, tCoor_Param.yLen);
@@ -62,20 +62,20 @@ void Coordinate::StartPaint()
 void Coordinate::EndPaint()
 {
 	//把点的画布贴到坐标轴画布上
-	BitBlt(hdc_coor.hdcBuffer, tCoor_Param.x, tCoor_Param.y - tCoor_Param.yLen, tCoor_Param.xLen, tCoor_Param.yLen, 
+	BitBlt(tCoor_Param.hdc, tCoor_Param.x, tCoor_Param.y - tCoor_Param.yLen, tCoor_Param.xLen, tCoor_Param.yLen, 
 		hdc_point.hdcBuffer, 0, 0, SRCAND);
 
-	SelectObject(hdc_point.hdcBuffer, hdc_coor.Prebitmap);
+	SelectObject(hdc_point.hdcBuffer, hdc_point.Prebitmap);
 	DeleteObject(hdc_point.bitmap);
 	DeleteDC(hdc_point.hdcBuffer);
 
 	//把坐标轴画布贴到目标画布上
-	BitBlt(tCoor_Param.hdc, tCoor_Param.xCanvasPoint, tCoor_Param.yCanvasPoint, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, 
-		hdc_coor.hdcBuffer, 0, 0, SRCAND);
-
-	SelectObject(hdc_coor.hdcBuffer, hdc_coor.Prebitmap);
-	DeleteObject(hdc_coor.bitmap);
-	DeleteDC(hdc_coor.hdcBuffer);
+// 	BitBlt(tCoor_Param.hdc, tCoor_Param.xCanvasPoint, tCoor_Param.yCanvasPoint, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, 
+// 		hdc_coor.hdcBuffer, 0, 0, SRCAND);
+// 
+// 	SelectObject(hdc_coor.hdcBuffer, hdc_coor.Prebitmap);
+// 	DeleteObject(hdc_coor.bitmap);
+// 	DeleteDC(hdc_coor.hdcBuffer);
 }
 
 //Draw coordinnate
@@ -89,8 +89,8 @@ void Coordinate::DrawCoordinate(
 	HFONT hPreFont, hDataFont;
 	PaintFun paint;
 	hDataFont = paint.CreateMyFont((LPCTSTR)("微软雅黑"), 10, 15, 0);
-	hPreFont = (HFONT)SelectObject(hdc_coor.hdcBuffer, hDataFont);
-	HPEN hPrePen = (HPEN)SelectObject(hdc_coor.hdcBuffer, GetStockObject(BLACK_PEN));
+	hPreFont = (HFONT)SelectObject(tCoor_Param.hdc, hDataFont);
+	HPEN hPrePen = (HPEN)SelectObject(tCoor_Param.hdc, GetStockObject(BLACK_PEN));
 	//SetBkColor(hdc_coor.hdcBuffer, BRUSH_WHITE);
 
 	wchar_t *lpcText;
@@ -164,7 +164,7 @@ void Coordinate::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(hdc_coor.hdcBuffer, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
+			TextOut(tCoor_Param.hdc, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
 			free(lpcText);
 		}
 
@@ -228,7 +228,7 @@ void Coordinate::DrawCoordinate(
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(hdc_coor.hdcBuffer, 
+			TextOut(tCoor_Param.hdc, 
 				apt[i * 3].x - (TextString[start_point + i - 1].length() * 10 + 4), 
 				apt[i * 3].y - (15/2), 
 				lpcText, 
@@ -240,12 +240,12 @@ void Coordinate::DrawCoordinate(
 		apt[valueable_point_cnt * 3 + 1].y = tCoor_Param.y - tCoor_Param.yLen;
 	}
 
-	Polyline(hdc_coor.hdcBuffer, apt, valueable_point_cnt * 3 + 2);
+	Polyline(tCoor_Param.hdc, apt, valueable_point_cnt * 3 + 2);
 	free(apt);
 	free(total_apt);
-	SelectObject(hdc_coor.hdcBuffer, hPreFont);
+	SelectObject(tCoor_Param.hdc, hPreFont);
 	DeleteObject(hDataFont);
-	SelectObject(hdc_coor.hdcBuffer, hPrePen);
+	SelectObject(tCoor_Param.hdc, hPrePen);
 	DeleteObject(GetStockObject(BLACK_PEN));
 }
 

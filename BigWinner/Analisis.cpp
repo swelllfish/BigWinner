@@ -47,17 +47,21 @@ void Analisis::ShowTable(HDC hdc)
 	HBITMAP PreBitmap;
 	PaintFun paintfun;
 
-	LARGE_INTEGER begin_time, end_time, freq_;
+// 	LARGE_INTEGER begin_time, end_time, freq_;
+// 	QueryPerformanceFrequency(&freq_);
+// 	QueryPerformanceCounter(&begin_time);
 
 	bitmapBuff =  CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	hdcBuffer = CreateCompatibleDC(hdc);
 	PreBitmap = (HBITMAP)SelectObject(hdcBuffer, bitmapBuff);
+
 	DrawBackGround(hdcBuffer);
-
-// 	QueryPerformanceFrequency(&freq_);
-// 	QueryPerformanceCounter(&begin_time);
-
 	DrawCoordinate(hdcBuffer);
+	BitBlt(hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
+
+	SelectObject(hdcBuffer, PreBitmap);
+	DeleteObject(bitmapBuff);
+	DeleteDC(hdcBuffer);
 
 // 	QueryPerformanceCounter(&end_time);
 // 	double ns_time = (end_time.QuadPart - begin_time.QuadPart) * 1000000.0 / freq_.QuadPart;
@@ -68,12 +72,6 @@ void Analisis::ShowTable(HDC hdc)
 // 	lpcText = (wchar_t *) malloc(sizeof(wchar_t) *time.length());
 // 	StringToLPCWSTR(time, lpcText);
 // 	TextOut(hdc, tableAreaRect.left, tableAreaRect.top, lpcText, 12);
-
-	BitBlt(hdc, windowAreaRect.left, windowAreaRect.top, windowAreaRect.right, windowAreaRect.bottom, hdcBuffer, windowAreaRect.left, windowAreaRect.top, SRCCOPY);
-
-	SelectObject(hdcBuffer, PreBitmap);
-	DeleteObject(bitmapBuff);
-	DeleteDC(hdcBuffer);
 }
 
 void Analisis::DrawCoordinate(HDC hdcBuffer)
