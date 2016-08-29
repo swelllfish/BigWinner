@@ -2,7 +2,7 @@
 /**Bigwinner register window main function**/
 
 #define ID_TIMER 1
-#define TIMER_CLK 16
+#define TIMER_CLK 30
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 WNDCLASS SetWndClass(HINSTANCE, TCHAR []);
@@ -77,7 +77,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		opfile.FileAnalise();
 		analisis.GetFilePoint(&opfile);
-		analisis.DrawBackGround(hdc);
+// 		analisis.DrawBackGround(hdc);
 		hInstance = ((LPCREATESTRUCT) lParam)->hInstance;
 		analisis.CreateWindowButton(hwnd, hInstance);
 

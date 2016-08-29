@@ -199,7 +199,7 @@ void Coordinate::DrawCoordinate(
 		for (i = 0; i < PointCnt; ++i)
 		{
 			total_apt[i] = total_apt[0] - (int)(i * InterLen);
-			tCoor_Param.yPoint[i] = total_apt[i] + tCoor_Param.y - 10;
+			tCoor_Param.yPoint[i] = total_apt[i] + tCoor_Param.yLen;
 			if (total_apt[i] <= 0 && total_apt[i] >= - tCoor_Param.yLen)
 			{
 				valueable_point_cnt++;
@@ -260,14 +260,23 @@ void Coordinate::DrawPoint(
 		return;
 	}
 
-	PaintFun paintfun;
-
-	HPEN hPrePen = (HPEN)SelectObject(hdc_point.hdcBuffer, GetStockObject(NULL_PEN));
 
 	int Left = tCoor_Param.xPoint[xPointNum - 1] - 10;
 	int Top = tCoor_Param.yPoint[yPointNum - 1] - 10;
 	int Right = tCoor_Param.xPoint[xPointNum - 1] + 10;
 	int Buttom = tCoor_Param.yPoint[yPointNum - 1] + 10;
+
+	//如果超过显示范围则不画
+	if (Left > tCoor_Param.xLen
+		|| Right < 0
+		|| Buttom < 0
+		|| Top > tCoor_Param.yLen)
+	{
+		return;
+	}
+
+	PaintFun paintfun;
+	HPEN hPrePen = (HPEN)SelectObject(hdc_point.hdcBuffer, GetStockObject(NULL_PEN));
 
 	HBRUSH hBrushBlue = CreateSolidBrush(BRUSH_DEEP_BLUE);
 	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrushBlue);

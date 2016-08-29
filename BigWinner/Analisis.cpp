@@ -143,7 +143,13 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_string
 		);
 
-	coor.DrawPoint(1900, 33);
+	for (int i = 1; i < 1900; i++)
+	{
+		for (int j = 1; j < 34; j++)
+		{
+			coor.DrawPoint(i, j);
+		}
+	}
 
 	coor.EndPaint();
 }
