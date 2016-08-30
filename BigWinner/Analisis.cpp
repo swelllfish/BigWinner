@@ -126,28 +126,39 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 
 	coor.StartPaint();
 
-	vector<string>::iterator it_string = p_opfile->GetInfor_it(0, DATA_NUM);
+	vector<string>::iterator it_Data = p_opfile->GetInfor_it(0, DATA_NUM);
 	coor.DrawCoordinate(
 		tableStartPoint_x, 
 		nowInterLen,
 		p_opfile->GetInfor_Capacity(DATA_NUM),
 		HORZION_COOR,
-		it_string
+		it_Data
 		);
+
+	vector<string> BallNum;
+	char num[4];
+	for (int i = 0; i < 34; i++)
+	{
+		_itoa_s(i, num, 10);
+		BallNum.push_back(num);
+	}
+	vector<string>::iterator it_BallNum = BallNum.begin();
 
 	coor.DrawCoordinate(
 		0, 
-		(tableAreaRect.bottom - tableAreaRect.top - 40) / 33, 
-		33,
+		(tableAreaRect.bottom - tableAreaRect.top - 40) / 34, 
+		34,
 		VERTICAL_COOR,
-		it_string
+		it_BallNum
 		);
 
-	for (int i = 1; i < 1900; i++)
+	vector<U8>::iterator it_redBallNum = p_opfile->GetInfor_it(0, 0, US_RED_BALL);
+	for (int i = 0; i < 1929; i++)
 	{
-		for (int j = 1; j < 34; j++)
+		for (int j = 0; j < 6; j++)
 		{
-			coor.DrawPoint(i, j);
+			int redBallNum = (int)it_redBallNum[i * 6 + j];
+			coor.DrawPoint(i, redBallNum);
 		}
 	}
 

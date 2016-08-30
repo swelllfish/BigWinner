@@ -261,10 +261,10 @@ void Coordinate::DrawPoint(
 	}
 
 
-	int Left = tCoor_Param.xPoint[xPointNum - 1] - 10;
-	int Top = tCoor_Param.yPoint[yPointNum - 1] - 10;
-	int Right = tCoor_Param.xPoint[xPointNum - 1] + 10;
-	int Buttom = tCoor_Param.yPoint[yPointNum - 1] + 10;
+	int Left = tCoor_Param.xPoint[xPointNum] - 10;
+	int Top = tCoor_Param.yPoint[yPointNum] - 10;
+	int Right = tCoor_Param.xPoint[xPointNum] + 10;
+	int Buttom = tCoor_Param.yPoint[yPointNum] + 10;
 
 	//如果超过显示范围则不画
 	if (Left > tCoor_Param.xLen

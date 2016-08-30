@@ -160,8 +160,10 @@ vector<U8>::iterator OpFile::GetInfor_it(int SerNum, U8 BallNum, U8 Type)
 		it_BallNum = numinfor.SequRed.begin();
 		break;
 	case US_RED_BALL:
+		it_BallNum = numinfor.UnseqRed.begin();
 		break;
 	case BLUE_BALL:
+		it_BallNum = numinfor.BlueBall.begin();
 		break;
 	default:
 		break;
