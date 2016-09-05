@@ -152,6 +152,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		it_BallNum
 		);
 
+	// ∂‘”¶∫≈ª≠µ„
 	vector<U8>::iterator it_redBallNum = p_opfile->GetInfor_it(0, 0, US_RED_BALL);
 	for (int i = 0; i < 1929; i++)
 	{

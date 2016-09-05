@@ -91,7 +91,7 @@ void Coordinate::DrawCoordinate(
 	hDataFont = paint.CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
 	hPreFont = (HFONT)SelectObject(tCoor_Param.hdc, hDataFont);
 	HPEN hPrePen = (HPEN)SelectObject(tCoor_Param.hdc, GetStockObject(BLACK_PEN));
-	//SetBkColor(hdc_coor.hdcBuffer, BRUSH_WHITE);
+	SetBkColor(tCoor_Param.hdc, BRUSH_WHITE);
 
 	wchar_t *lpcText;
 	int valueable_point_cnt = 0;
@@ -261,10 +261,10 @@ void Coordinate::DrawPoint(
 	}
 
 
-	int Left = tCoor_Param.xPoint[xPointNum] - 10;
-	int Top = tCoor_Param.yPoint[yPointNum] - 10;
-	int Right = tCoor_Param.xPoint[xPointNum] + 10;
-	int Buttom = tCoor_Param.yPoint[yPointNum] + 10;
+	int Left = tCoor_Param.xPoint[xPointNum] - 12;
+	int Top = tCoor_Param.yPoint[yPointNum] - 12;
+	int Right = tCoor_Param.xPoint[xPointNum] + 12;
+	int Buttom = tCoor_Param.yPoint[yPointNum] + 12;
 
 	//Èç¹û³¬¹ýÏÔÊ¾·¶Î§Ôò²»»­
 	if (Left > tCoor_Param.xLen
@@ -278,10 +278,29 @@ void Coordinate::DrawPoint(
 	PaintFun paintfun;
 	HPEN hPrePen = (HPEN)SelectObject(hdc_point.hdcBuffer, GetStockObject(NULL_PEN));
 
-	HBRUSH hBrushBlue = CreateSolidBrush(BRUSH_DEEP_BLUE);
+	HBRUSH hBrushBlue = CreateSolidBrush(BRUSH_LIGHT_BLUE);
 	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrushBlue);
+	SetBkColor(hdc_point.hdcBuffer, BRUSH_LIGHT_BLUE);
 
 	Ellipse(hdc_point.hdcBuffer, Left, Top, Right, Buttom);
+
+	wchar_t Number[3];
+	swprintf_s(Number, L"%d", yPointNum);
+	PaintFun paint;
+	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 8, 10, 0);
+	HFONT hPreFont = (HFONT)SelectObject(hdc_point.hdcBuffer, hDataFont);
+
+	if (yPointNum < 10)
+	{
+		TextOut(hdc_point.hdcBuffer, Left + 8, Top + 5, Number, 1);
+	}
+	else
+	{
+		TextOut(hdc_point.hdcBuffer, Left + 4, Top + 5, Number, 2);
+	}
+
+	SelectObject(hdc_point.hdcBuffer, hPreFont);
+	DeleteObject(hDataFont);
 
 	SelectObject(hdc_point.hdcBuffer, hPreBrush);
 	DeleteObject(hBrushBlue);
