@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Coordinate.h"
 
-Coordinate::Coordinate(int x, int y, int xLen, int yLen, HDC hdc)
+Coordinate::Coordinate(unsigned char bMode, int x, int y, int xLen, int yLen, HDC hdc)
 {
+	//坐标轴的模式
+	tCoor_Param.bMode = bMode;
+
 	//用于保存点的数据的指针
 	tCoor_Param.xPoint = NULL;  
 	tCoor_Param.yPoint = NULL;
@@ -14,14 +17,6 @@ Coordinate::Coordinate(int x, int y, int xLen, int yLen, HDC hdc)
 	//坐标轴长度
 	tCoor_Param.xLen = xLen;    
 	tCoor_Param.yLen = yLen;
-
-// 	//坐标画布的长度
-// 	tCoor_Param.xCanvasSize = xLen + 90;  
-// 	tCoor_Param.yCanvasSize = yLen + 40;
-// 
-// 	//最后帖画布时应该使用的起点位置
-// 	tCoor_Param.xCanvasPoint = x - 80;
-// 	tCoor_Param.yCanvasPoint = y - yLen - 10;
 
 	tCoor_Param.hdc = hdc;
 }
@@ -44,13 +39,6 @@ Coordinate::~Coordinate(void)
 
 void Coordinate::StartPaint()
 {
-	//申请坐标轴画布
-// 	hdc_coor.bitmap =  CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize);
-// 	hdc_coor.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
-// 	hdc_coor.Prebitmap = (HBITMAP)SelectObject(hdc_coor.hdcBuffer, hdc_coor.bitmap);
-// 
-// 	PatBlt(hdc_coor.hdcBuffer, 0, 0, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, WHITENESS);
-
 	//申请点的画布
 	hdc_point.bitmap = CreateCompatibleBitmap(tCoor_Param.hdc, tCoor_Param.xLen, tCoor_Param.yLen);
 	hdc_point.hdcBuffer = CreateCompatibleDC(tCoor_Param.hdc);
@@ -68,14 +56,6 @@ void Coordinate::EndPaint()
 	SelectObject(hdc_point.hdcBuffer, hdc_point.Prebitmap);
 	DeleteObject(hdc_point.bitmap);
 	DeleteDC(hdc_point.hdcBuffer);
-
-	//把坐标轴画布贴到目标画布上
-// 	BitBlt(tCoor_Param.hdc, tCoor_Param.xCanvasPoint, tCoor_Param.yCanvasPoint, tCoor_Param.xCanvasSize, tCoor_Param.yCanvasSize, 
-// 		hdc_coor.hdcBuffer, 0, 0, SRCAND);
-// 
-// 	SelectObject(hdc_coor.hdcBuffer, hdc_coor.Prebitmap);
-// 	DeleteObject(hdc_coor.bitmap);
-// 	DeleteDC(hdc_coor.hdcBuffer);
 }
 
 //Draw coordinnate
@@ -149,8 +129,17 @@ void Coordinate::DrawCoordinate(
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 
 		apt[0].x = tCoor_Param.x;
-		apt[0].y = tCoor_Param.y;
 
+		if (tCoor_Param.bMode == COOR_MODE_0
+			|| tCoor_Param.bMode == COOR_MODE_2)
+		{
+			apt[0].y = tCoor_Param.y;
+		}
+		else if (tCoor_Param.bMode == COOR_MODE_1
+			|| tCoor_Param.bMode == COOR_MODE_3)
+		{
+			apt[0].y = tCoor_Param.y - tCoor_Param.yLen;
+		}
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
 		{
@@ -169,7 +158,7 @@ void Coordinate::DrawCoordinate(
 		}
 
 		apt[valueable_point_cnt * 3 + 1].x = tCoor_Param.x + tCoor_Param.xLen;
-		apt[valueable_point_cnt * 3 + 1].y = tCoor_Param.y;
+		apt[valueable_point_cnt * 3 + 1].y = apt[0].y;
 	}
 	else if (CoorType == VERTICAL_COOR)
 	{
@@ -213,7 +202,17 @@ void Coordinate::DrawCoordinate(
 
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
 
-		apt[0].x = tCoor_Param.x;
+		if (tCoor_Param.bMode == COOR_MODE_0
+			|| tCoor_Param.bMode == COOR_MODE_1)
+		{
+			apt[0].x = tCoor_Param.x;
+		}
+		else if (tCoor_Param.bMode == COOR_MODE_2
+			|| tCoor_Param.bMode == COOR_MODE_3)
+		{
+			apt[0].x = tCoor_Param.x + tCoor_Param.xLen;
+		}
+
 		apt[0].y = tCoor_Param.y;
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
@@ -236,7 +235,7 @@ void Coordinate::DrawCoordinate(
 			free(lpcText);
 		}
 
-		apt[valueable_point_cnt * 3 + 1].x = tCoor_Param.x;
+		apt[valueable_point_cnt * 3 + 1].x = apt[0].x;
 		apt[valueable_point_cnt * 3 + 1].y = tCoor_Param.y - tCoor_Param.yLen;
 	}
 
@@ -252,7 +251,9 @@ void Coordinate::DrawCoordinate(
 
 void Coordinate::DrawPoint(
 	int xPointNum,
-	int yPointNum)
+	int yPointNum,
+	int Radium, 
+	COLORREF color)
 {
 
 	if (tCoor_Param.xPoint == NULL || tCoor_Param.yPoint == NULL)
@@ -261,10 +262,10 @@ void Coordinate::DrawPoint(
 	}
 
 
-	int Left = tCoor_Param.xPoint[xPointNum] - 12;
-	int Top = tCoor_Param.yPoint[yPointNum] - 12;
-	int Right = tCoor_Param.xPoint[xPointNum] + 12;
-	int Buttom = tCoor_Param.yPoint[yPointNum] + 12;
+	int Left = tCoor_Param.xPoint[xPointNum] - Radium;
+	int Top = tCoor_Param.yPoint[yPointNum] - Radium;
+	int Right = tCoor_Param.xPoint[xPointNum] + Radium;
+	int Buttom = tCoor_Param.yPoint[yPointNum] + Radium;
 
 	//如果超过显示范围则不画
 	if (Left > tCoor_Param.xLen
@@ -278,32 +279,32 @@ void Coordinate::DrawPoint(
 	PaintFun paintfun;
 	HPEN hPrePen = (HPEN)SelectObject(hdc_point.hdcBuffer, GetStockObject(NULL_PEN));
 
-	HBRUSH hBrushBlue = CreateSolidBrush(BRUSH_LIGHT_BLUE);
-	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrushBlue);
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrush);
 	SetBkColor(hdc_point.hdcBuffer, BRUSH_LIGHT_BLUE);
 
 	Ellipse(hdc_point.hdcBuffer, Left, Top, Right, Buttom);
 
 	wchar_t Number[3];
-	swprintf_s(Number, L"%d", yPointNum);
+	swprintf_s(Number, L"%d", xPointNum);
 	PaintFun paint;
-	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("微软雅黑"), 8, 10, 0);
+	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("黑体"), 6, 8, 0);
 	HFONT hPreFont = (HFONT)SelectObject(hdc_point.hdcBuffer, hDataFont);
 
-	if (yPointNum < 10)
+	if (xPointNum < 10)
 	{
-		TextOut(hdc_point.hdcBuffer, Left + 8, Top + 5, Number, 1);
+		TextOut(hdc_point.hdcBuffer, Left + ((Radium * 2 - 6)/2), Top + ((Radium * 2 - 8)/2), Number, 1);
 	}
 	else
 	{
-		TextOut(hdc_point.hdcBuffer, Left + 4, Top + 5, Number, 2);
+		TextOut(hdc_point.hdcBuffer, Left + ((Radium * 2 - 12)/2), Top + ((Radium * 2 - 8)/2), Number, 2);
 	}
 
 	SelectObject(hdc_point.hdcBuffer, hPreFont);
 	DeleteObject(hDataFont);
 
 	SelectObject(hdc_point.hdcBuffer, hPreBrush);
-	DeleteObject(hBrushBlue);
+	DeleteObject(hBrush);
 	SelectObject(hdc_point.hdcBuffer, hPrePen);
 	DeleteObject(GetStockObject(NULL_PEN));
 }

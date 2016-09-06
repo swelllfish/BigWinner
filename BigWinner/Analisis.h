@@ -43,14 +43,17 @@ private:
 	int   newInterLen;	//Horrizon coordinate inter length
 	int   preInterLen;  //Old Horrizon coordinate inter length
 	bool  lButtonDownFlag;
-	bool  tableSlideFlag;
+	bool  tableSlideFlag_x;
+	bool  tableSlideFlag_y;
 	double tableSlideMove_x;  //Table Slide move
+	double tableSlideMove_y;
 	char  zoomWhellChange;
 	POINT preMouseLocation;
 	POINT nowMouseLocation;
 	POINT whellMouseLocation;
 	int   mouseMove_x;	//Table move follow the cursor
-	int   tableStartPoint_x;	//First Point Location
+	int   mouseMove_y;
+	int   tableStartPoint_y;	//First Point Location
 	ANALYSIS_BUTTON Analysis_Button;
 };
 
