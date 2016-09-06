@@ -305,7 +305,7 @@ void Coordinate::DrawPoint(
 	wchar_t Number[3];
 	swprintf_s(Number, L"%d", showNumber);
 	PaintFun paint;
-	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("÷ÚÌו"), 6, 9, 0);
+	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("ËÎÌו"), 6, 9, 0);
 	HFONT hPreFont = (HFONT)SelectObject(hdc_point.hdcBuffer, hDataFont);
 
 	if (xPointNum < 10)
