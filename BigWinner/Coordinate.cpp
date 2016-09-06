@@ -68,7 +68,9 @@ void Coordinate::DrawCoordinate(
 {
 	HFONT hPreFont, hDataFont;
 	PaintFun paint;
-	hDataFont = paint.CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 10, 15, 0);
+	int CoorPoint;
+	int TextOffset;
+	hDataFont = paint.CreateMyFont((LPCTSTR)("Î¢ÈíÑÅºÚ"), 8, 13, 0);
 	hPreFont = (HFONT)SelectObject(tCoor_Param.hdc, hDataFont);
 	HPEN hPrePen = (HPEN)SelectObject(tCoor_Param.hdc, GetStockObject(BLACK_PEN));
 	SetBkColor(tCoor_Param.hdc, BRUSH_WHITE);
@@ -134,11 +136,15 @@ void Coordinate::DrawCoordinate(
 			|| tCoor_Param.bMode == COOR_MODE_2)
 		{
 			apt[0].y = tCoor_Param.y;
+			CoorPoint = -5;
+			TextOffset = 0;
 		}
 		else if (tCoor_Param.bMode == COOR_MODE_1
 			|| tCoor_Param.bMode == COOR_MODE_3)
 		{
 			apt[0].y = tCoor_Param.y - tCoor_Param.yLen;
+			CoorPoint = 5;
+			TextOffset = -17;
 		}
 
 		for (int i = 1; i <= valueable_point_cnt; i++)
@@ -147,13 +153,13 @@ void Coordinate::DrawCoordinate(
 			apt[i * 3 - 2].y = apt[0].y;
 
 			apt[i * 3 - 1].x = apt[i * 3 - 2].x;
-			apt[i * 3 - 1].y = apt[0].y - 5;
+			apt[i * 3 - 1].y = apt[0].y + CoorPoint;
 
 			apt[i * 3] = apt[i * 3 - 2];
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
-			TextOut(tCoor_Param.hdc, apt[i * 3].x, apt[i * 3].y, lpcText, TextString[start_point + i - 1].length());
+			TextOut(tCoor_Param.hdc, apt[i * 3].x - 4, apt[i * 3].y + TextOffset, lpcText, TextString[start_point + i - 1].length());
 			free(lpcText);
 		}
 
@@ -206,11 +212,15 @@ void Coordinate::DrawCoordinate(
 			|| tCoor_Param.bMode == COOR_MODE_1)
 		{
 			apt[0].x = tCoor_Param.x;
+			CoorPoint = 5;
+			TextOffset = 0xFFFF;
 		}
 		else if (tCoor_Param.bMode == COOR_MODE_2
 			|| tCoor_Param.bMode == COOR_MODE_3)
 		{
 			apt[0].x = tCoor_Param.x + tCoor_Param.xLen;
+			CoorPoint = -5;
+			TextOffset = 0;
 		}
 
 		apt[0].y = tCoor_Param.y;
@@ -220,15 +230,21 @@ void Coordinate::DrawCoordinate(
 			apt[i * 3 - 2].x = apt[0].x;
 			apt[i * 3 - 2].y = total_apt[start_point + i - 1] + tCoor_Param.y;
 
-			apt[i * 3 - 1].x = apt[0].x + 5;
+			apt[i * 3 - 1].x = apt[0].x + CoorPoint;
 			apt[i * 3 - 1].y = apt[i * 3 - 2].y;
 
 			apt[i * 3] = apt[i * 3 - 2];
 
 			lpcText = (wchar_t *) malloc(sizeof(wchar_t) *(TextString[start_point + i - 1].length() + 1));
 			StringToLPCWSTR(TextString[start_point + i - 1], lpcText);
+
+			if (TextOffset != 0)
+			{
+				TextOffset = (TextString[start_point + i - 1].length() * 10 + 4);
+			}
+
 			TextOut(tCoor_Param.hdc, 
-				apt[i * 3].x - (TextString[start_point + i - 1].length() * 10 + 4), 
+				apt[i * 3].x - TextOffset, 
 				apt[i * 3].y - (15/2), 
 				lpcText, 
 				TextString[start_point + i - 1].length());
@@ -281,14 +297,14 @@ void Coordinate::DrawPoint(
 
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HBRUSH hPreBrush = (HBRUSH)SelectObject(hdc_point.hdcBuffer, hBrush);
-	SetBkColor(hdc_point.hdcBuffer, BRUSH_LIGHT_BLUE);
+	SetBkColor(hdc_point.hdcBuffer, color);
 
 	Ellipse(hdc_point.hdcBuffer, Left, Top, Right, Buttom);
 
 	wchar_t Number[3];
 	swprintf_s(Number, L"%d", xPointNum);
 	PaintFun paint;
-	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("ºÚÌå"), 6, 8, 0);
+	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("ºÚÌå"), 6, 9, 0);
 	HFONT hPreFont = (HFONT)SelectObject(hdc_point.hdcBuffer, hDataFont);
 
 	if (xPointNum < 10)
