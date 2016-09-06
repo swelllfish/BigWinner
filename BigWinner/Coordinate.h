@@ -50,7 +50,8 @@ public:
 		int xPointNum,
 		int yPointNum,
 		int Radium, 
-		COLORREF color);
+		COLORREF color,
+		int showNumber);
 
 private:
 	tCOOR_PARAM tCoor_Param;

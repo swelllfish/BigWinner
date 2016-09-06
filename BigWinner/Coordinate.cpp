@@ -269,7 +269,8 @@ void Coordinate::DrawPoint(
 	int xPointNum,
 	int yPointNum,
 	int Radium, 
-	COLORREF color)
+	COLORREF color,
+	int showNumber)
 {
 
 	if (tCoor_Param.xPoint == NULL || tCoor_Param.yPoint == NULL)
@@ -302,7 +303,7 @@ void Coordinate::DrawPoint(
 	Ellipse(hdc_point.hdcBuffer, Left, Top, Right, Buttom);
 
 	wchar_t Number[3];
-	swprintf_s(Number, L"%d", xPointNum);
+	swprintf_s(Number, L"%d", showNumber);
 	PaintFun paint;
 	HFONT hDataFont = paint.CreateMyFont((LPCTSTR)("ºÚÌå"), 6, 9, 0);
 	HFONT hPreFont = (HFONT)SelectObject(hdc_point.hdcBuffer, hDataFont);

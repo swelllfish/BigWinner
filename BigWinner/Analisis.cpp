@@ -142,24 +142,33 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 		_itoa_s(i, num, 10);
 		BallNum.push_back(num);
 	}
+	for (int i = 1; i < 17; i++)
+	{
+		_itoa_s(i, num, 10);
+		BallNum.push_back(num);
+	}
+
 	vector<string>::iterator it_BallNum = BallNum.begin();
 
 	coor.DrawCoordinate(
 		0, 
 		20, 
-		34,
+		50,
 		HORZION_COOR,
 		it_BallNum
 		);
 
 	// ∂‘”¶∫≈ª≠µ„
 	vector<U8>::iterator it_redBallNum = p_opfile->GetInfor_it(0, 0, US_RED_BALL);
+	vector<U8>::iterator it_blueBallNum = p_opfile->GetInfor_it(0, 0, BLUE_BALL);
 	for (int i = 0; i < 1929; i++)
 	{
 		for (int j = 0; j < 6; j++)
 		{
 			int redBallNum = (int)it_redBallNum[i * 6 + j];
-			coor.DrawPoint(redBallNum, i, 10, BRUSH_LIGHT_BLUE);
+			int blueBallNum = (int)it_blueBallNum[i];
+			coor.DrawPoint(redBallNum, i, 10, BRUSH_RED, redBallNum);
+			coor.DrawPoint(blueBallNum + 33, i, 10, BRUSH_DEEP_BLUE, blueBallNum);
 		}
 	}
 
@@ -184,7 +193,7 @@ void Analisis::SetWorkSpaceArea(int x, int y)
 	tableAreaRect.top = windowAreaRect.top + 40;
 	tableAreaRect.bottom = windowAreaRect.bottom - 40;
 	tableAreaRect.left = windowAreaRect.left + 50;
-	tableAreaRect.right = tableAreaRect.left + 49 * 20;
+	tableAreaRect.right = tableAreaRect.left + 49 * 25;
 }
 
 void Analisis::ChangeShowArea(short MouseWhell)
