@@ -72,7 +72,6 @@ void Coordinate::DrawCoordinate(
 	int TextOffset;
 	hDataFont = paint.CreateMyFont((LPCTSTR)("微软雅黑"), 8, 13, 0);
 	hPreFont = (HFONT)SelectObject(tCoor_Param.hdc, hDataFont);
-	HPEN hPrePen = (HPEN)SelectObject(tCoor_Param.hdc, GetStockObject(BLACK_PEN));
 	SetBkColor(tCoor_Param.hdc, BRUSH_WHITE);
 
 	wchar_t *lpcText;
@@ -81,6 +80,7 @@ void Coordinate::DrawCoordinate(
 
 	LONG *total_apt = (LONG*)malloc(sizeof(LONG) * (PointCnt + 1));		//add point 0
 	POINT *apt;
+	POINT *apt_grid;
 
 	if (CoorType == HORZION_COOR)
 	{
@@ -129,6 +129,7 @@ void Coordinate::DrawCoordinate(
 		}
 
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
+		apt_grid = (POINT*)malloc(sizeof(POINT)*valueable_point_cnt*3);
 
 		apt[0].x = tCoor_Param.x;
 
@@ -165,6 +166,52 @@ void Coordinate::DrawCoordinate(
 
 		apt[valueable_point_cnt * 3 + 1].x = tCoor_Param.x + tCoor_Param.xLen;
 		apt[valueable_point_cnt * 3 + 1].y = apt[0].y;
+
+		//设置网格线
+		if ((apt[1].x - (InterLen / 2)) < apt[0].x)  //网格线第一个点位于坐标第一个点的右边
+		{
+			for (int i = 0; i < valueable_point_cnt; i++)
+			{
+				apt_grid[i*3].x = apt[i * 3 + 1].x + (InterLen / 2);
+				apt_grid[i*3].y = apt[0].y;
+
+				apt_grid[i*3 + 1].x = apt_grid[i*3].x;
+
+				if (tCoor_Param.bMode == COOR_MODE_0
+					|| tCoor_Param.bMode == COOR_MODE_2)
+				{
+					apt_grid[i*3 + 1].y = apt[0].y - tCoor_Param.yLen;
+				}
+				else
+				{
+					apt_grid[i*3 + 1].y = apt[0].y + tCoor_Param.yLen;
+				}
+
+				apt_grid[i*3 + 2] = apt_grid[i*3];
+			}
+		}
+		else
+		{
+			for (int i = 0; i < valueable_point_cnt; i++)
+			{
+				apt_grid[i*3].x = apt[i * 3 + 1].x - (InterLen / 2);
+				apt_grid[i*3].y = apt[0].y;
+
+				apt_grid[i*3 + 1].x = apt_grid[i*3].x;
+
+				if (tCoor_Param.bMode == COOR_MODE_0
+					|| tCoor_Param.bMode == COOR_MODE_2)
+				{
+					apt_grid[i*3 + 1].y = apt[0].y - tCoor_Param.yLen;
+				}
+				else
+				{
+					apt_grid[i*3 + 1].y = apt[0].y + tCoor_Param.yLen;
+				}
+
+				apt_grid[i*3 + 2] = apt_grid[i*3];
+			}
+		}
 	}
 	else if (CoorType == VERTICAL_COOR)
 	{
@@ -207,6 +254,7 @@ void Coordinate::DrawCoordinate(
 		}
 
 		apt = (POINT*)malloc(sizeof(POINT) * (valueable_point_cnt * 3 + 2));	//add start and end point
+		apt_grid = (POINT*)malloc(sizeof(POINT)*valueable_point_cnt*3);
 
 		if (tCoor_Param.bMode == COOR_MODE_0
 			|| tCoor_Param.bMode == COOR_MODE_1)
@@ -253,15 +301,70 @@ void Coordinate::DrawCoordinate(
 
 		apt[valueable_point_cnt * 3 + 1].x = apt[0].x;
 		apt[valueable_point_cnt * 3 + 1].y = tCoor_Param.y - tCoor_Param.yLen;
-	}
 
+		//设置网格线
+		if ((apt[1].y - (InterLen / 2)) < apt[0].y)  //网格线第一个点位于坐标第一个点的下面
+		{
+			for (int i = 0; i < valueable_point_cnt; i++)
+			{
+				apt_grid[i*3].y = apt[i * 3 + 1].y + (InterLen / 2);
+				apt_grid[i*3].x = apt[0].x;
+
+				apt_grid[i*3 + 1].y = apt_grid[i*3].y;
+
+				if (tCoor_Param.bMode == COOR_MODE_0
+					|| tCoor_Param.bMode == COOR_MODE_1)
+				{
+					apt_grid[i*3 + 1].x = apt[0].x + tCoor_Param.xLen;
+				}
+				else
+				{
+					apt_grid[i*3 + 1].x = apt[0].x - tCoor_Param.xLen;
+
+				}
+
+				apt_grid[i*3 + 2] = apt_grid[i*3];
+			}
+		}
+		else
+		{
+			for (int i = 0; i < valueable_point_cnt; i++)
+			{
+				apt_grid[i*3].y = apt[i * 3 + 1].y - (InterLen / 2);
+				apt_grid[i*3].x = apt[0].x;
+
+				apt_grid[i*3 + 1].y = apt_grid[i*3 - 3].y;
+
+				if (tCoor_Param.bMode == COOR_MODE_0
+					|| tCoor_Param.bMode == COOR_MODE_1)
+				{
+					apt_grid[i*3 + 1].x = apt[0].x + tCoor_Param.yLen;
+				}
+				else
+				{
+					apt_grid[i*3 + 1].x = apt[0].x - tCoor_Param.yLen;
+
+				}
+
+				apt_grid[i*3 + 2] = apt_grid[i*3];
+			}
+		}
+	}
+	HPEN Gray_Pen = CreatePen(PS_SOLID, 1, BRUSH_LIGHT_GRAY);
+	HPEN hPrePen = (HPEN)SelectObject(tCoor_Param.hdc, Gray_Pen);
+	Polyline(tCoor_Param.hdc, apt_grid, valueable_point_cnt * 3);
+
+	SelectObject(tCoor_Param.hdc, GetStockObject(BLACK_PEN));
 	Polyline(tCoor_Param.hdc, apt, valueable_point_cnt * 3 + 2);
+
 	free(apt);
 	free(total_apt);
+	free(apt_grid);
 	SelectObject(tCoor_Param.hdc, hPreFont);
 	DeleteObject(hDataFont);
 	SelectObject(tCoor_Param.hdc, hPrePen);
 	DeleteObject(GetStockObject(BLACK_PEN));
+	DeleteObject(Gray_Pen);
 }
 
 

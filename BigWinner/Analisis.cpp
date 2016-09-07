@@ -77,7 +77,7 @@ void Analisis::ShowTable(HDC hdc)
 void Analisis::DrawCoordinate(HDC hdcBuffer)
 {
 	PaintFun paintfun;
-	int xCoor_Len = tableAreaRect.right - tableAreaRect.left - 120;
+	int xCoor_Len = 1000/*tableAreaRect.right - tableAreaRect.left - 120*/;
 	int yCoor_Len = tableAreaRect.bottom - tableAreaRect.top - 40;
 	POINT Start_Point = {tableAreaRect.left + 80, tableAreaRect.bottom - 20};
 	static bool First_In = TRUE;
@@ -99,7 +99,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 
 	if (zoomWhellChange != WHELL_ZOOM_NON)
 	{
-		int point_num = (whellMouseLocation.y - Start_Point.y - tableStartPoint_y) / preInterLen;
+		int point_num = (whellMouseLocation.y - (Start_Point.y - yCoor_Len + tableStartPoint_y)) / preInterLen;
 
 		if (zoomWhellChange == WHELL_ZOOM_IN)
 		{
@@ -168,7 +168,7 @@ void Analisis::DrawCoordinate(HDC hdcBuffer)
 			int redBallNum = (int)it_redBallNum[i * 6 + j];
 			int blueBallNum = (int)it_blueBallNum[i];
 			coor.DrawPoint(redBallNum, i, 10, BRUSH_RED, redBallNum);
-			coor.DrawPoint(blueBallNum + 33, i, 10, BRUSH_DEEP_BLUE, blueBallNum);
+			coor.DrawPoint(blueBallNum + 33, i, 10, BRUSH_LIGHT_BLUE, blueBallNum);
 		}
 	}
 
@@ -254,6 +254,7 @@ void Analisis::MouseAction(HWND hwnd, short x, short y, unsigned short act_type)
 		{
 			mouseMove_x = nowMouseLocation.x - preMouseLocation.x;
 			mouseMove_y = nowMouseLocation.y - preMouseLocation.y;
+			zoomWhellChange = WHELL_ZOOM_NON;
 			InvalidateRect(hwnd, &tableAreaRect, FALSE);
 		}
 		break;

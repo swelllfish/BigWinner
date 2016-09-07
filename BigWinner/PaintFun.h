@@ -14,7 +14,7 @@ using namespace std;
 #define BRUSH_WHITE			RGB(235, 235, 235)
 #define BRUSH_GRAY			RGB(156, 156, 156)
 #define BRUSH_BLACK			RGB(50, 50, 50)
-#define BRUSH_LIGHT_GRAY	RGB(240, 240, 240)
+#define BRUSH_LIGHT_GRAY	RGB(210, 210, 210)
 #define BRUSH_DEEP_GRAY		RGB(173, 173, 173)
 
 #define HORZION_COOR (0)
